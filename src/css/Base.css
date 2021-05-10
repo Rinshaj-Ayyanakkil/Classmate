@@ -1,0 +1,20 @@
+:root {
+	--background-primary-dark: rgb(11, 14, 17);
+	--color-primary-dark: rgba(34, 39, 46);
+	--color-primary-light: rgba(34, 39, 46, 0.4);
+	--danger-red: rgb(151, 39, 39);
+	--text-primary: #dddddd;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	background-color: var(--background-primary-dark);
+	color: var(--text-primary);
+	font-family: "Montserrat", sans-serif;
+	height: 120vh;
+}
+
+.page-container {
+	position: relative;
+}
