@@ -6,21 +6,25 @@ import HomePage from "./routes/HomePage";
 import LoginPage from "./routes/LoginPage";
 import TeamGeneratorPage from "./routes/TeamGeneratorPage";
 import NavBar from "./components/NavBar";
+import { Fragment, useState } from "react";
 
 function App() {
-	// dummy navbar links
+	const [isAuthorized, setAuthorized] = useState(false);
+
+	// navbar links
 	const routes = [
-		{ name: "Home", path: "/home" },
+		{ name: "Home", path: "/dashboard" },
 		{ name: "Contact", path: "/contact" },
 		{ name: "About Us", path: "/about" },
 	];
 
-	const RouteWrapped = (props) => {
+	// routes with nav bar
+	const RouteWithNav = (props) => {
 		return (
-			<div>
+			<Fragment>
 				<NavBar title="Classmate" links={routes} />
 				<Route exact={props.exact} path={props.path} component={props.component} />
-			</div>
+			</Fragment>
 		);
 	};
 
@@ -29,16 +33,24 @@ function App() {
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/">
-						<Redirect to="/login" />
+						<Redirect to={isAuthorized ? `/dashboard` : `/login`} />
 					</Route>
 
 					<Route exact path="/login" component={LoginPage} />
 
-					<RouteWrapped exact path="/home" component={HomePage} />
+					<RouteWithNav path="/dashboard">
+						{!isAuthorized && <Redirect to="/login" />}
+					</RouteWithNav>
 
-					<RouteWrapped exact path="/students" component={StudentsPage} />
+					<RouteWithNav exact path="/dashboard" component={HomePage} />
 
-					<RouteWrapped exact path="/team-generator" component={TeamGeneratorPage} />
+					<RouteWithNav exact path="/dashboard/students" component={StudentsPage} />
+
+					<RouteWithNav
+						exact
+						path="/dashboard/team-generator"
+						component={TeamGeneratorPage}
+					/>
 
 					<Route path="/" render={() => <div>404</div>} />
 				</Switch>
