@@ -142,16 +142,19 @@
 .login-box .field {
 	display: flex;
 	flex-direction: column;
+	flex-wrap: wrap;
 	padding: 10px;
 }
 
 .login-box .field.error {
 	display: block;
 	color: red;
+	padding: 10px 0;
 }
 
 .login-box .field.error::before {
 	content: "*";
+	padding: inherit;
 }
 
 .login-box .field label {
@@ -178,7 +181,7 @@
 	box-shadow: 1px 1px 10px 1px red;
 }
 
-.login-box .login-button {
+.login-box .submit-button {
 	border: 0;
 	outline: 0;
 	padding: 10px;
@@ -188,8 +191,8 @@
 	font-size: large;
 }
 
-.login-box .login-button:hover,
-.login-button:focus {
+.login-box .submit-button:hover,
+.submit-button:focus {
 	background-color: green;
 	color: var(--text-primary);
 	box-shadow: 1px 1px 10px 1px yellowgreen;

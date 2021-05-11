@@ -1,21 +1,20 @@
-import "../css/Base.css";
-import "../css/UI-Components.css";
+import React from "react";
 import useForm from "../hooks/useForm";
 
-export default function LoginBox(props) {
-	const [formInputs, changeFormInputs] = useForm({ username: ``, password: `` });
+export default function RegisterForm() {
+	const [formInputs, changeFormInputs] = useForm({
+		id: ``,
+		username: "",
+		password: "",
+	});
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		props.onLogin(formInputs.username, formInputs.password);
-	};
+	const handleSubmit = () => {};
 
 	return (
-		<div className={`login-box`}>
-			<h1>Login</h1>
+		<div class="register-box">
+			<h1>Sign Up</h1>
 			<form onSubmit={handleSubmit}>
-				{props.loginError && <div className="field error">{props.loginError}</div>}
-				<div className={`field`}>
+				<div className="field">
 					<label>username</label>
 					<input
 						name="username"
@@ -26,7 +25,7 @@ export default function LoginBox(props) {
 						required
 					/>
 				</div>
-				<div className={`field`}>
+				<div className="field">
 					<label>password</label>
 					<input
 						name="password"
@@ -38,7 +37,7 @@ export default function LoginBox(props) {
 				</div>
 				<div className={`field`}>
 					<button className="submit-button" type="submit">
-						Log in
+						Register
 					</button>
 				</div>
 			</form>

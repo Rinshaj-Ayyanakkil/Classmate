@@ -35,7 +35,6 @@ export default function LoginPage(props) {
 			});
 		} catch (error) {
 			setLoginError("Sorry, something went wrong");
-			console.log(error);
 		}
 	};
 
