@@ -6,50 +6,87 @@ import HomePage from "./routes/HomePage";
 import LoginPage from "./routes/LoginPage";
 import TeamGeneratorPage from "./routes/TeamGeneratorPage";
 import NavBar from "./components/NavBar";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
-	const [isAuthorized, setAuthorized] = useState(false);
+	const [isAuthorized, setAuthorized] = useLocalStorage("classmate-auth", false);
+
+	const setAuth = (boolean) => {
+		setAuthorized(boolean);
+	};
 
 	// navbar links
 	const routes = [
-		{ name: "Home", path: "/dashboard" },
+		{ name: "Home", path: "/home" },
 		{ name: "Contact", path: "/contact" },
 		{ name: "About Us", path: "/about" },
 	];
 
-	// routes with nav bar
-	const RouteWithNav = (props) => {
+	// routes require authentication
+	function ProtectedRoute({
+		path,
+		component: Component,
+		componentProps,
+		isAuthorized,
+		...rest
+	}) {
 		return (
 			<Fragment>
 				<NavBar title="Classmate" links={routes} />
-				<Route exact={props.exact} path={props.path} component={props.component} />
+				<Route
+					{...rest}
+					render={(...props) =>
+						isAuthorized ? (
+							<Component {...props} {...componentProps} />
+						) : (
+							<Redirect to={{ pathname: "/login", state: { from: props.location } }} />
+						)
+					}
+				/>
 			</Fragment>
 		);
-	};
+	}
 
 	return (
 		<div>
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/">
-						<Redirect to={isAuthorized ? `/dashboard` : `/login`} />
+						<Redirect to="/login" />
 					</Route>
 
-					<Route exact path="/login" component={LoginPage} />
-
-					<RouteWithNav path="/dashboard">
-						{!isAuthorized && <Redirect to="/login" />}
-					</RouteWithNav>
-
-					<RouteWithNav exact path="/dashboard" component={HomePage} />
-
-					<RouteWithNav exact path="/dashboard/students" component={StudentsPage} />
-
-					<RouteWithNav
+					<Route
 						exact
-						path="/dashboard/team-generator"
+						path="/login"
+						render={(props) =>
+							isAuthorized ? (
+								<Redirect to="/home" from="/login" />
+							) : (
+								<LoginPage setAuth={setAuth} />
+							)
+						}
+					/>
+
+					<ProtectedRoute
+						exact
+						path="/home"
+						component={HomePage}
+						isAuthorized={isAuthorized}
+					/>
+
+					<ProtectedRoute
+						exact
+						path="/team-generator"
 						component={TeamGeneratorPage}
+						isAuthorized={isAuthorized}
+					/>
+
+					<ProtectedRoute
+						exact
+						path="/students"
+						component={StudentsPage}
+						isAuthorized={isAuthorized}
 					/>
 
 					<Route path="/" render={() => <div>404</div>} />

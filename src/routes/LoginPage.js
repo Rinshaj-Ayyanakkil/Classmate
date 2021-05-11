@@ -1,11 +1,9 @@
 import React from "react";
-import LoginBox from "../components/LoginBox";
+import LoginForm from "../components/LoginForm";
 import { useState } from "react";
-import { useHistory } from "react-router";
 
-export default function LoginPage(props) {
+export default function LoginPage({ setAuth }) {
 	const [loginError, setLoginError] = useState(null);
-	const history = useHistory();
 
 	const handleLogin = async (username, password) => {
 		try {
@@ -29,10 +27,7 @@ export default function LoginPage(props) {
 			}
 
 			setLoginError(null);
-			history.push({
-				pathname: "/home",
-				state: { user_id: data.user.type },
-			});
+			setAuth(true);
 		} catch (error) {
 			setLoginError("Sorry, something went wrong");
 		}
@@ -40,7 +35,7 @@ export default function LoginPage(props) {
 
 	return (
 		<div className="page-container">
-			<LoginBox onLogin={handleLogin} loginError={loginError} />
+			<LoginForm onLogin={handleLogin} loginError={loginError} />
 		</div>
 	);
 }

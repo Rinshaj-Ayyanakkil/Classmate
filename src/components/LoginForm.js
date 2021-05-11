@@ -11,10 +11,10 @@ export default function LoginBox(props) {
 	};
 
 	return (
-		<div className={`login-box`}>
+		<div className="form-box login-form">
 			<h1>Login</h1>
 			<form onSubmit={handleSubmit}>
-				{props.loginError && <div className="field error">{props.loginError}</div>}
+				{props.loginError && <span className="error">{props.loginError}</span>}
 				<div className={`field`}>
 					<label>username</label>
 					<input
