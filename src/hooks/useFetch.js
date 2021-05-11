@@ -16,8 +16,8 @@ const useFetch = (url, options) => {
 		};
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	return { response, isLoading };
+	}, [url]);
+	return [response, isLoading];
 };
 
 export default useFetch;

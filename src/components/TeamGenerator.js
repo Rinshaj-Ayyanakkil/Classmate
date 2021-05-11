@@ -93,6 +93,7 @@ export default function TeamGenerator(props) {
 		[userInput, students, isAllStudentsChecked]
 	);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => props.onTeamGenerate(teams), [teams]);
 
 	return (

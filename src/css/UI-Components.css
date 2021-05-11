@@ -145,6 +145,15 @@
 	padding: 10px;
 }
 
+.login-box .field.error {
+	display: block;
+	color: red;
+}
+
+.login-box .field.error::before {
+	content: "*";
+}
+
 .login-box .field label {
 	text-transform: uppercase;
 	margin-bottom: 10px;
