@@ -147,7 +147,8 @@
 	margin-bottom: 10px;
 }
 
-.form-box .field input {
+.form-box .field input,
+select {
 	background-color: var(--danger-red);
 	border: 0;
 	outline: 0;
@@ -156,13 +157,8 @@
 	font-family: inherit;
 }
 
-.form-box .field input:-internal-autofill-selected {
-	background-color: rgb(0, 255, 255) !important;
-	background-image: none !important;
-	color: rgb(0, 0, 0) !important;
-}
-
-.form-box .field input:focus {
+.form-box .field input:focus,
+select:focus {
 	box-shadow: 1px 1px 10px 1px red;
 }
 
