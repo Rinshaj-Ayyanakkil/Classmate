@@ -4,12 +4,45 @@ import useFetch from "../hooks/useFetch";
 import useForm from "../hooks/useForm";
 
 export default function RegisterForm() {
-	const [formInputs, changeFormInputs] = useForm({
-		id: ``,
-		username: ``,
-		password: ``,
-		confirmPassword: ``,
-	});
+	const formFields = {
+		id: {
+			value: ``,
+		},
+		username: {
+			value: ``,
+			validations: [
+				{ pattern: /^.{1,}$/, message: `username cant be empty` },
+				{
+					pattern: /^.{1,250}$/,
+					message: `username must be less than 250 characters`,
+				},
+				{ pattern: /^\S*$/, message: `username should not contain spaces` },
+				{
+					pattern: /^[a-z]+$/,
+					message: `username should only contain lowercase alphabets`,
+				},
+			],
+		},
+		password: {
+			value: ``,
+			validations: [
+				{
+					pattern: /^.{8,}$/,
+					message: `password must contain minimum 8 characters `,
+				},
+			],
+		},
+		confirmPassword: {
+			value: ``,
+			// validations: [
+			// 	{ pattern: `pattern`, message: `error msg` },
+			// 	{ pattern: `pattern`, message: `error msg` },
+			// 	{ pattern: `pattern`, message: `error msg` },
+			// ],
+		},
+	};
+
+	const [formInputs, changeFormInputs, formErrors] = useForm(formFields);
 
 	const [response] = useFetch(`${process.env.REACT_APP_SERVER_URL}/ids`);
 	const [ids, setIds] = useState([]);
@@ -18,6 +51,7 @@ export default function RegisterForm() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		console.log(formInputs);
 	};
 
 	return (
@@ -27,9 +61,8 @@ export default function RegisterForm() {
 				<div className="field">
 					<label>Select your register number</label>
 					<select
-						name="password"
-						type="password"
-						value={formInputs.password}
+						name="id"
+						value={formInputs.id}
 						onChange={changeFormInputs}
 						required
 					>
@@ -48,6 +81,7 @@ export default function RegisterForm() {
 						autoComplete="off"
 						required
 					/>
+					{formErrors.username && <div className="error">{formErrors.username}</div>}
 				</div>
 				<div className="field">
 					<label>password</label>
@@ -58,6 +92,7 @@ export default function RegisterForm() {
 						onChange={changeFormInputs}
 						required
 					/>
+					{formErrors.password && <div className="error">{formErrors.password}</div>}
 				</div>
 				<div className="field">
 					<label>Confirm Password</label>
@@ -68,6 +103,9 @@ export default function RegisterForm() {
 						onChange={changeFormInputs}
 						required
 					/>
+					{formErrors.confirmPassword && (
+						<div className="error">{formErrors.confirmPassword}</div>
+					)}
 				</div>
 				<div className="field">
 					<button className="submit-button" type="submit">
