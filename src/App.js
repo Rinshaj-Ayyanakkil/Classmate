@@ -77,7 +77,7 @@ function App() {
 							isAuthorized ? (
 								<Redirect to="/home" from="/register" />
 							) : (
-								<RegisterPage {...props} />
+								<RegisterPage {...props} setAuth={setAuth} />
 							)
 						}
 					/>

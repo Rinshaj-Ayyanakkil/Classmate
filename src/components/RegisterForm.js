@@ -3,10 +3,10 @@ import { generateKey } from "../Globals";
 import useFetch from "../hooks/useFetch";
 import useForm from "../hooks/useForm";
 
-export default function RegisterForm() {
+export default function RegisterForm({ handleSubmit, registerError }) {
 	const formFields = {
 		id: {
-			value: ``,
+			value: `1`,
 		},
 		username: {
 			value: ``,
@@ -49,15 +49,16 @@ export default function RegisterForm() {
 
 	useEffect(() => (response ? setIds(response.ids) : setIds([])), [response]);
 
-	const handleSubmit = (e) => {
+	const onSubmit = (e) => {
 		e.preventDefault();
-		console.log(formInputs);
+		handleSubmit(formInputs);
 	};
 
 	return (
 		<div className="register-form form-box">
 			<h1>Sign Up</h1>
-			<form onSubmit={handleSubmit}>
+			{registerError && <div className="error">{registerError}</div>}
+			<form onSubmit={onSubmit}>
 				<div className="field">
 					<label>Select your register number</label>
 					<select
@@ -108,7 +109,13 @@ export default function RegisterForm() {
 					)}
 				</div>
 				<div className="field">
-					<button className="submit-button" type="submit">
+					<button
+						className="submit-button"
+						type="submit"
+						disabled={
+							Object.keys(formErrors).filter((field) => formErrors[field]).length !== 0
+						}
+					>
 						Register
 					</button>
 				</div>
