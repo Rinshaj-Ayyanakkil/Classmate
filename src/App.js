@@ -6,6 +6,7 @@ import HomePage from "./routes/HomePage";
 import LoginPage from "./routes/LoginPage";
 import TeamGeneratorPage from "./routes/TeamGeneratorPage";
 import NavBar from "./components/NavBar";
+import RegisterPage from "./routes/RegisterPage";
 import { Fragment } from "react";
 import useLocalStorage from "./hooks/useLocalStorage";
 
@@ -58,12 +59,24 @@ function App() {
 
 					<Route
 						exact
+						path="/register"
+						render={(props) =>
+							isAuthorized ? (
+								<Redirect to="/home" from="/register" />
+							) : (
+								<RegisterPage {...props} />
+							)
+						}
+					/>
+
+					<Route
+						exact
 						path="/login"
 						render={(props) =>
 							isAuthorized ? (
 								<Redirect to="/home" from="/login" />
 							) : (
-								<LoginPage setAuth={setAuth} />
+								<LoginPage setAuth={setAuth} {...props} />
 							)
 						}
 					/>
@@ -88,8 +101,6 @@ function App() {
 						component={StudentsPage}
 						isAuthorized={isAuthorized}
 					/>
-
-					<Route path="/" render={() => <div>404</div>} />
 				</Switch>
 			</BrowserRouter>
 		</div>
