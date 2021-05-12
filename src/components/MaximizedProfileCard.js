@@ -3,24 +3,24 @@ import "../css/UI-Components.css";
 import Biodata from "./Biodata";
 import { fetchStudentImage } from "../Globals";
 
-export default function MaximizedProfileCard(props) {
+export default function MaximizedProfileCard({ student, onClose }) {
 	return (
-		<div className={`max-profile-card-container`} onClick={props.onClose}>
+		<div className={`max-profile-card-container`} onClick={onClose}>
 			<div className={`max-profile-card`} onClick={(e) => e.stopPropagation()}>
-				<button className={`close-button`} onClick={props.onClose}></button>
+				<button className={`close-button`} onClick={onClose}></button>
 				<div className={`image`}>
-					<img src={fetchStudentImage(props.student.rollno)} alt={`Unavailable`} />
+					<img src={fetchStudentImage(student.rollNo)} alt={`Unavailable`} />
 				</div>
 				<div className={`bio`}>
-					<Biodata label={`name`} value={props.student.name} />
-					<Biodata label={`dob`} value={props.student.dob} />
-					<Biodata label={`sex`} value={props.student.sex} />
-					<Biodata label={`phone`} value={props.student.phone} />
-					<Biodata label={`address`} value={props.student.address} />
-					<Biodata label={`register no.`} value={props.student.regno} />
-					<Biodata label={`father`} value={props.student.father} />
-					<Biodata label={`mother`} value={props.student.mother} />
-					<Biodata label={`blood group`} value={props.student.bloodGroup} />
+					<Biodata label={`name`} value={student.name} />
+					<Biodata label={`dob`} value={student.dob} />
+					<Biodata label={`sex`} value={student.sex} />
+					<Biodata label={`phone`} value={student.phone} />
+					<Biodata label={`address`} value={student.address} />
+					<Biodata label={`register no.`} value={student.regNo} />
+					<Biodata label={`father`} value={student.father} />
+					<Biodata label={`mother`} value={student.mother} />
+					<Biodata label={`blood group`} value={student.bloodGroup} />
 				</div>
 			</div>
 		</div>

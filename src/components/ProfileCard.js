@@ -2,15 +2,15 @@ import "../css/Base.css";
 import "../css/UI-Components.css";
 import { fetchStudentImage } from "../Globals";
 
-export default function ProfileCard(props) {
+export default function ProfileCard({ student, onClick }) {
 	return (
-		<div className={`profile-card`} onClick={props.onClick}>
+		<div className={`profile-card`} onClick={onClick}>
 			<div className={"image"}>
-				<img src={fetchStudentImage(props.student.rollno)} alt={`unavilable`} />
+				<img src={fetchStudentImage(student.rollNo)} alt={`unavailable`} />
 			</div>
 
-			<div className={`header rollno`}>{props.student.rollno}</div>
-			<div className={`header name`}>{props.student.name}</div>
+			<div className={`header rollno`}>{student.rollNo}</div>
+			<div className={`header name`}>{student.name}</div>
 		</div>
 	);
 }

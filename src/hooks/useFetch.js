@@ -8,15 +8,15 @@ const useFetch = (url, options) => {
 			try {
 				const res = await fetch(url, options);
 				const data = await res.json();
-				setResponse({ ok: true, data: data });
+				setResponse(data);
 				setLoading(false);
 			} catch (error) {
-				setResponse({ ok: false, error: error });
+				setResponse(null);
 			}
 		};
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [url]);
+	}, []);
 	return [response, isLoading];
 };
 
