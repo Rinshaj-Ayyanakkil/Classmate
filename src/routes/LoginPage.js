@@ -7,7 +7,7 @@ export default function LoginPage({ setAuth }) {
 
 	const handleLogin = async (username, password) => {
 		try {
-			const res = await fetch("http://127.0.0.1:5000/login", {
+			const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/login`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
