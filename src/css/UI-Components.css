@@ -170,8 +170,9 @@
 	border: 0;
 	outline: 0;
 	padding: 10px;
+	margin-top: 20px;
 	background-color: yellowgreen;
-	color: black;
+	color: var(--color-primary-dark);
 	text-transform: uppercase;
 	font-size: large;
 }
@@ -205,8 +206,15 @@
 
 /* register-form */
 
-.register-box {
+.register-form {
 	position: relative;
+	align-items: flex-start;
+	margin: 10px;
+	width: 300px;
+}
+
+.register-form .field {
+	width: 100%;
 }
 
 /* X-Close Button */
