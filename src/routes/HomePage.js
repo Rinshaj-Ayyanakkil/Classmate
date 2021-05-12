@@ -6,11 +6,13 @@ import React from "react";
 export default function HomePage() {
 	return (
 		<div className="page-container">
-			<div className="tab">
-				<Link to="/students">Students</Link>
-			</div>
-			<div className="tab">
-				<Link to="/team-generator">Team Generator</Link>
+			<div className="dashboard">
+				<div className="tab">
+					<Link to="/students">Students</Link>
+				</div>
+				<div className="tab">
+					<Link to="/team-generator">Team Generator</Link>
+				</div>
 			</div>
 		</div>
 	);
