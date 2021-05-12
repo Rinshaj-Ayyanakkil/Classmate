@@ -22,6 +22,7 @@ function App() {
 		{ name: "Home", path: "/home" },
 		{ name: "Contact", path: "/contact" },
 		{ name: "About Us", path: "/about" },
+		{ name: "Log out", path: "/logout" },
 	];
 
 	// routes require authentication
@@ -56,6 +57,18 @@ function App() {
 					<Route exact path="/">
 						<Redirect to="/login" />
 					</Route>
+
+					<Route
+						exact
+						path="/logout"
+						render={(props) =>
+							isAuthorized ? (
+								localStorage.removeItem("classmate-auth")
+							) : (
+								<Redirect to="/" />
+							)
+						}
+					/>
 
 					<Route
 						exact
