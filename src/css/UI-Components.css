@@ -195,6 +195,21 @@ select:focus {
 	padding: inherit;
 }
 
+.form-box .link {
+	display: block;
+	align-self: flex-start;
+	padding: 0.2rem 0.5rem;
+}
+
+.form-box .link a {
+	text-decoration: none;
+	color: var(--danger-red);
+}
+
+.form-box .link a:hover {
+	color: blue;
+}
+
 /* login-form */
 
 .login-form {
