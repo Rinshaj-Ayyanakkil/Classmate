@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
 import useFetch from "../hooks/useFetch";
 import useForm from "../hooks/useForm";
+import { Link } from "react-router-dom";
 
 export default function RegisterForm({ handleSubmit, registerError }) {
 	const formFields = {
@@ -17,10 +18,6 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 					message: `username must be less than 250 characters`,
 				},
 				{ pattern: /^\S*$/, message: `username should not contain spaces` },
-				{
-					pattern: /^[a-z]+$/,
-					message: `username should only contain lowercase alphabets`,
-				},
 			],
 		},
 		password: {
@@ -56,7 +53,9 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 
 	return (
 		<div className="register-form form-box">
-			<h1>Sign Up</h1>
+			<div className="header">
+				<h1>Sign Up</h1>
+			</div>
 			{registerError && <div className="error">{registerError}</div>}
 			<form onSubmit={onSubmit}>
 				<div className="field">
@@ -120,6 +119,11 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 					</button>
 				</div>
 			</form>
+			<div className="footer">
+				<div className="link">
+					<Link to="/login">Log In</Link>
+				</div>
+			</div>
 		</div>
 	);
 }

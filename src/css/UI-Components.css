@@ -126,28 +126,41 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: center;
+	align-items: flex-start;
 	padding: 2rem 3rem;
+	position: absolute;
+	top: 10vh;
+	left: 50%;
+	transform: translate(-50%);
+	width: 30%;
 }
 
-.form-box h1 {
+.form-box header {
 	align-self: flex-start;
 	margin-bottom: 2rem;
 }
 
-.form-box .field {
+.form-box form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.form-box form .field {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
 	padding: 10px;
 }
 
-.form-box .field label {
+.form-box form .field label {
 	text-transform: uppercase;
 	margin-bottom: 10px;
 }
 
-.form-box .field input,
+.form-box form .field input,
 select {
 	background-color: var(--danger-red);
 	border: 0;
@@ -162,7 +175,7 @@ select:focus {
 	box-shadow: 1px 1px 10px 1px red;
 }
 
-.form-box .submit-button {
+.form-box form .field .submit-button {
 	border: 0;
 	outline: 0;
 	padding: 10px;
@@ -173,7 +186,7 @@ select:focus {
 	font-size: large;
 }
 
-.form-box .submit-button:hover:not([disabled]),
+.form-box form .field .submit-button:hover:not([disabled]),
 .submit:focus {
 	background-color: green;
 	color: var(--text-primary);
@@ -212,25 +225,7 @@ select:focus {
 
 /* login-form */
 
-.login-form {
-	position: absolute;
-	top: 10vh;
-	left: 50%;
-	transform: translate(-50%);
-}
-
 /* register-form */
-
-.register-form {
-	position: relative;
-	align-items: flex-start;
-	margin: 10px;
-	width: 300px;
-}
-
-.register-form .field {
-	width: 100%;
-}
 
 /* X-Close Button */
 
@@ -240,7 +235,6 @@ select:focus {
 	outline: 0;
 	background-color: #282c34;
 	width: 10%;
-	aspect-ratio: 1 / 1;
 	border-radius: 50%;
 	color: var(--danger-red);
 	cursor: pointer;
