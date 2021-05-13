@@ -9,9 +9,13 @@ import NavBar from "./components/NavBar";
 import RegisterPage from "./routes/RegisterPage";
 import { Fragment } from "react";
 import useLocalStorage from "./hooks/useLocalStorage";
+import LogoutPage from "./routes/LogoutPage";
 
 function App() {
-	const [isAuthorized, setAuthorized] = useLocalStorage("classmate-auth", false);
+	const [isAuthorized, setAuthorized] = useLocalStorage(
+		process.env.REACT_APP_TOKEN_KEY,
+		false
+	);
 
 	const setAuth = (boolean) => {
 		setAuthorized(boolean);
@@ -42,7 +46,7 @@ function App() {
 						isAuthorized ? (
 							<Component {...props} {...componentProps} />
 						) : (
-							<Redirect to={{ pathname: "/login", state: { from: props.location } }} />
+							<Redirect to={{ pathname: "/", state: { from: props.location } }} />
 						)
 					}
 				/>
@@ -63,7 +67,7 @@ function App() {
 						path="/logout"
 						render={(props) =>
 							isAuthorized ? (
-								localStorage.removeItem("classmate-auth")
+								<LogoutPage {...props} setAuth={setAuth} />
 							) : (
 								<Redirect to="/" />
 							)
