@@ -7,13 +7,21 @@ export default function HomePage() {
 	return (
 		<div className="page-container">
 			<div className="dashboard">
-				<div className="tab">
-					<Link to="/students">Students</Link>
+				<div className="header">
+					<h1>Dashboard</h1>
 				</div>
-				<div className="tab">
-					<Link to="/team-generator">Team Generator</Link>
+				<div className="content">
+					<Link to="/students">
+						{" "}
+						<div className="tab">Students</div>
+					</Link>
+
+					<Link to="/team-generator">
+						<div className="tab">Team Generator</div>
+					</Link>
 				</div>
 			</div>
+			<div className="footer"></div>
 		</div>
 	);
 }
