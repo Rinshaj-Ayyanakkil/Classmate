@@ -1,20 +1,14 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ProfileCard from "../components/ProfileCard";
 import MaximizedProfileCard from "../components/MaximizedProfileCard";
-import useFetch from "../hooks/useFetch";
 import { generateKey } from "../Globals";
+import { useStudents } from "../contexts/StudentsContext";
 
 export default function StudentsPage() {
-	const [response] = useFetch(`${process.env.REACT_APP_SERVER_URL}/students`);
-
-	const [students, setStudents] = useState([]);
-	const [selectedCard, setSelectedCard] = useState(null);
-
-	useEffect(() => {
-		if (response) setStudents(response);
-	}, [response]);
+	const students = useStudents();
+	const [maximizedCard, setMaximizedCard] = useState(null);
 
 	return (
 		<div className="page-container">
@@ -23,15 +17,15 @@ export default function StudentsPage() {
 					<ProfileCard
 						key={generateKey(student.rollNo)}
 						student={student}
-						onClick={() => setSelectedCard(student)}
+						onClick={() => setMaximizedCard(student)}
 					/>
 				))}
 			</div>
 
-			{selectedCard ? (
+			{maximizedCard ? (
 				<MaximizedProfileCard
-					student={selectedCard}
-					onClose={() => setSelectedCard(null)}
+					student={maximizedCard}
+					onClose={() => setMaximizedCard(null)}
 				/>
 			) : null}
 		</div>
