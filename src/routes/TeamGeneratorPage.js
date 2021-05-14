@@ -1,19 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TeamGenerator from "../components/TeamGenerator";
 import TeamViewer from "../components/TeamViewer";
 
-export default function TeamGeneratorPage(props) {
-	const [teams, setTeams] = useState({});
+const TeamsContext = React.createContext();
 
-	const fetchGeneratedTeam = (fetchedTeam) => {
-		setTeams(fetchedTeam);
-	};
+export const useTeams = () => {
+	return useContext(TeamsContext);
+};
+
+export default function TeamGeneratorPage() {
+	const [teams, setTeams] = useState({});
 
 	return (
 		<div className="page-container">
 			<h1>Team Generator</h1>
-			<TeamGenerator onTeamGenerate={fetchGeneratedTeam} />
-			<TeamViewer teams={teams} />
+			<TeamsContext.Provider value={[teams, setTeams]}>
+				<TeamGenerator />
+				<TeamViewer teams={teams} />
+			</TeamsContext.Provider>
 		</div>
 	);
 }
