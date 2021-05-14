@@ -32,10 +32,7 @@ export default function useForm(fields) {
 	const isFirstRender = useFirstRender();
 
 	useEffect(() => {
-		if (isFirstRender) {
-			console.log(`first render`);
-			return;
-		}
+		if (isFirstRender) return;
 		const temp = {};
 		for (const field in values) {
 			temp[field] = validate(field);
