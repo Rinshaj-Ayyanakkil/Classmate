@@ -10,6 +10,7 @@ import RegisterPage from "./routes/RegisterPage";
 import { Fragment } from "react";
 import useLocalStorage from "./hooks/useLocalStorage";
 import LogoutPage from "./routes/LogoutPage";
+import { StudentsProvider } from "./contexts/StudentsContext";
 
 function App() {
 	const [isAuthorized, setAuthorized] = useLocalStorage(
@@ -57,68 +58,70 @@ function App() {
 	return (
 		<div>
 			<BrowserRouter>
-				<Switch>
-					<Route exact path="/">
-						<Redirect to="/login" />
-					</Route>
+				<StudentsProvider>
+					<Switch>
+						<Route exact path="/">
+							<Redirect to="/login" />
+						</Route>
 
-					<Route
-						exact
-						path="/logout"
-						render={(props) =>
-							isAuthorized ? (
-								<LogoutPage {...props} setAuth={setAuth} />
-							) : (
-								<Redirect to="/" />
-							)
-						}
-					/>
+						<Route
+							exact
+							path="/logout"
+							render={(props) =>
+								isAuthorized ? (
+									<LogoutPage {...props} setAuth={setAuth} />
+								) : (
+									<Redirect to="/" />
+								)
+							}
+						/>
 
-					<Route
-						exact
-						path="/register"
-						render={(props) =>
-							isAuthorized ? (
-								<Redirect to="/home" from="/register" />
-							) : (
-								<RegisterPage {...props} setAuth={setAuth} />
-							)
-						}
-					/>
+						<Route
+							exact
+							path="/register"
+							render={(props) =>
+								isAuthorized ? (
+									<Redirect to="/home" from="/register" />
+								) : (
+									<RegisterPage {...props} setAuth={setAuth} />
+								)
+							}
+						/>
 
-					<Route
-						exact
-						path="/login"
-						render={(props) =>
-							isAuthorized ? (
-								<Redirect to="/home" from="/login" />
-							) : (
-								<LoginPage setAuth={setAuth} {...props} />
-							)
-						}
-					/>
+						<Route
+							exact
+							path="/login"
+							render={(props) =>
+								isAuthorized ? (
+									<Redirect to="/home" from="/login" />
+								) : (
+									<LoginPage setAuth={setAuth} {...props} />
+								)
+							}
+						/>
 
-					<ProtectedRoute
-						exact
-						path="/home"
-						component={HomePage}
-						isAuthorized={isAuthorized}
-					/>
+						<ProtectedRoute
+							exact
+							path="/home"
+							component={HomePage}
+							isAuthorized={isAuthorized}
+						/>
 
-					<ProtectedRoute
-						exact
-						path="/team-generator"
-						component={TeamGeneratorPage}
-						isAuthorized={isAuthorized}
-					/>
+						<ProtectedRoute
+							exact
+							path="/team-generator"
+							component={TeamGeneratorPage}
+							isAuthorized={isAuthorized}
+						/>
 
-					<ProtectedRoute
-						exact
-						path="/students"
-						component={StudentsPage}
-						isAuthorized={isAuthorized}
-					/>
-				</Switch>
+						<ProtectedRoute
+							exact
+							path="/students"
+							component={StudentsPage}
+							isAuthorized={isAuthorized}
+						/>
+					</Switch>
+				</StudentsProvider>
 			</BrowserRouter>
 		</div>
 	);
