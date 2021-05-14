@@ -1,22 +1,32 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import React, { useEffect, useState } from "react";
-import studentsData from "../assets/students.json";
+import React, { useEffect, useState, useCallback } from "react";
 import { generateKey, getRandomNumber, shuffleArray } from "../Globals";
+import { useStudents } from "../contexts/StudentsContext";
+import { useTeams } from "../routes/TeamGeneratorPage";
 
-export default function TeamGenerator(props) {
-	const [students, setStudents] = useState(
-		studentsData.map((student) => {
-			return { rollno: student.rollno, name: student.name, isParticipating: true };
-		})
-	);
+export default function TeamGenerator({ onTeamGenerate }) {
+	const [students, setStudents] = useState([]);
+	const studentsData = useStudents();
+
+	useEffect(() => {
+		setStudents(
+			studentsData.map((student) => {
+				return {
+					rollno: student.rollNo,
+					name: student.name,
+					isParticipating: true,
+				};
+			})
+		);
+	}, [studentsData]);
 
 	const [isAllStudentsChecked, setAllStudentsChecked] = useState(true);
 
-	const [userInput, setUserInput] = useState({ isTeamCount: true, value: 1 });
+	const [, setTeams] = useTeams();
 
-	const [teams, setTeams] = useState({});
 	const [isFieldsetCollapsed, setFieldsetCollapsed] = useState(false);
+	const [userInput, setUserInput] = useState({ isTeamCount: true, value: 1 });
 
 	const handleInputChange = (event) => {
 		const [min, max, value] = [
@@ -32,7 +42,7 @@ export default function TeamGenerator(props) {
 		setUserInput({ ...userInput, value: value });
 	};
 
-	const handleItemClicked = (rollno) => {
+	const toggleItemCrossed = (rollno) => {
 		const index = students.findIndex((student) => student.rollno === rollno);
 		const temp = [...students];
 		temp[index].isParticipating = !temp[index].isParticipating;
@@ -45,13 +55,18 @@ export default function TeamGenerator(props) {
 		);
 	}, [students]);
 
-	const toggleAllChecked = () => {
+	const toggleAllItemsCrossed = () => {
 		setAllStudentsChecked(!isAllStudentsChecked);
-		students.map((student) => (student.isParticipating = !isAllStudentsChecked));
+		setStudents(
+			students.map((student) => ({
+				...student,
+				isParticipating: !isAllStudentsChecked,
+			}))
+		);
 	};
 
 	// team generator function
-	const generateTeams = (isTeamCount, value, items) => {
+	const generateTeams = useCallback((isTeamCount, value, items) => {
 		const teamCount = isTeamCount ? value : Math.ceil(items.length / value);
 		const memberCount = isTeamCount ? Math.floor(items.length / value) : value;
 
@@ -67,7 +82,7 @@ export default function TeamGenerator(props) {
 				const randomIndex = getRandomNumber(0, items.length - 1);
 				const randomItem = items[randomIndex];
 				currTeam.push(randomItem);
-				items = items.filter((student) => student !== randomItem);
+				items = items.filter((item) => item !== randomItem);
 			}
 			if (currTeam.length === 0) break;
 			teamsList = { ...teamsList, [`team ${i + 1}`]: currTeam };
@@ -81,7 +96,7 @@ export default function TeamGenerator(props) {
 		}
 
 		return teamsList;
-	};
+	}, []);
 
 	useEffect(
 		() =>
@@ -90,11 +105,8 @@ export default function TeamGenerator(props) {
 					...students.filter((students) => students.isParticipating),
 				])
 			),
-		[userInput, students, isAllStudentsChecked]
+		[userInput, students, setTeams, generateTeams]
 	);
-
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useEffect(() => props.onTeamGenerate(teams), [teams]);
 
 	return (
 		<div className="page-container">
@@ -141,10 +153,16 @@ export default function TeamGenerator(props) {
 						<input
 							type="checkbox"
 							checked={isAllStudentsChecked}
-							onChange={toggleAllChecked}
+							onChange={toggleAllItemsCrossed}
 						/>
 						<span className="slider"></span>
 					</label>
+
+					<div>
+						{students instanceof Array
+							? students.filter((student) => student.isParticipating).length
+							: `no`}
+					</div>
 
 					<div className="items-list">
 						{students.map((student) => (
@@ -153,7 +171,7 @@ export default function TeamGenerator(props) {
 									!student.isParticipating ? `unchecked` : ``
 								}`}
 								key={generateKey(student.rollno)}
-								onClick={() => handleItemClicked(student.rollno)}
+								onClick={() => toggleItemCrossed(student.rollno)}
 							>
 								{student.name}
 							</div>
