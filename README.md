@@ -1,5 +1,5 @@
 # Classmate
 
-A Web-Application for students to orgainize class activites.
+A Web-Application for students to organize class activities.
 
 This project was created for the purpose of learning React.js
