@@ -6,8 +6,9 @@ import { useStudents } from "../contexts/StudentsContext";
 import { useTeams } from "../routes/TeamGeneratorPage";
 
 export default function TeamGenerator({ onTeamGenerate }) {
-	const [students, setStudents] = useState([]);
 	const studentsData = useStudents();
+
+	const [students, setStudents] = useState([]);
 
 	useEffect(() => {
 		setStudents(
@@ -58,10 +59,7 @@ export default function TeamGenerator({ onTeamGenerate }) {
 	const toggleAllItemsCrossed = () => {
 		setAllStudentsChecked(!isAllStudentsChecked);
 		setStudents(
-			students.map((student) => ({
-				...student,
-				isParticipating: !isAllStudentsChecked,
-			}))
+			students.map((student) => ({ isParticipating: !isAllStudentsChecked }))
 		);
 	};
 
