@@ -7,14 +7,14 @@ export default function LoginPage({ setAuth }) {
 
 	const handleLogin = async (username, password) => {
 		try {
-			const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/login`, {
+			const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/login`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
 				},
 				body: JSON.stringify({ username: username, password: password }),
 			});
-			const data = await res.json();
+			const data = await response.json();
 
 			if (!data.user) {
 				setLoginError("user not found");
