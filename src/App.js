@@ -4,7 +4,7 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import StudentsPage from "./routes/StudentsPage";
 import HomePage from "./routes/HomePage";
 import LoginPage from "./routes/LoginPage";
-import TeamGeneratorPage from "./routes/TeamGeneratorPage";
+import TeamManagerPage from "./routes/TeamManagerPage";
 import NavBar from "./components/NavBar";
 import RegisterPage from "./routes/RegisterPage";
 import { Fragment } from "react";
@@ -109,8 +109,8 @@ function App() {
 
 						<ProtectedRoute
 							exact
-							path="/team-generator"
-							component={TeamGeneratorPage}
+							path="/team-manager"
+							component={TeamManagerPage}
 							isAuthorized={isAuthorized}
 						/>
 

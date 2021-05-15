@@ -16,8 +16,8 @@ export default function HomePage() {
 						<div className="tab">Students</div>
 					</Link>
 
-					<Link to="/team-generator">
-						<div className="tab">Team Generator</div>
+					<Link to="/team-manager">
+						<div className="tab">Team Manager</div>
 					</Link>
 				</div>
 			</div>

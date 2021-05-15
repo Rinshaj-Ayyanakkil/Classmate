@@ -3,7 +3,7 @@ import "../css/UI-Components.css";
 import React, { useEffect, useState, useCallback } from "react";
 import { generateKey, getRandomNumber, shuffleArray } from "../Globals";
 import { useStudents } from "../contexts/StudentsContext";
-import { useTeams } from "../routes/TeamGeneratorPage";
+import { useTeams } from "../routes/TeamManagerPage";
 
 export default function TeamGenerator({ onTeamGenerate }) {
 	const studentsData = useStudents();

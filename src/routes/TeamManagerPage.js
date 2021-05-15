@@ -8,7 +8,7 @@ export const useTeams = () => {
 	return useContext(TeamsContext);
 };
 
-export default function TeamGeneratorPage() {
+export default function TeamManagerPage() {
 	const [teams, setTeams] = useState({});
 
 	return (

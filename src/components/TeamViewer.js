@@ -1,6 +1,6 @@
 import React from "react";
 import { generateKey } from "../Globals";
-import { useTeams } from "../routes/TeamGeneratorPage";
+import { useTeams } from "../routes/TeamManagerPage";
 
 export default function TeamViewer(props) {
 	const [teams] = useTeams();
