@@ -12,7 +12,6 @@ body {
 	background-color: var(--background-primary-dark);
 	color: var(--text-primary);
 	font-family: "Montserrat", sans-serif;
-	height: 120vh;
 }
 
 .page-container {
