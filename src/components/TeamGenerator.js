@@ -59,7 +59,10 @@ export default function TeamGenerator({ onTeamGenerate }) {
 	const toggleAllItemsCrossed = () => {
 		setAllStudentsChecked(!isAllStudentsChecked);
 		setStudents(
-			students.map((student) => ({ isParticipating: !isAllStudentsChecked }))
+			students.map((student) => ({
+				...student,
+				isParticipating: !isAllStudentsChecked,
+			}))
 		);
 	};
 
