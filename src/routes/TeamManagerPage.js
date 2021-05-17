@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import GroupViewer from "../components/GroupViewer";
 import TeamGenerator from "../components/TeamGenerator";
 import TeamSaveMenu from "../components/TeamSaveMenu";
 import TeamViewer from "../components/TeamViewer";
@@ -19,6 +20,7 @@ export default function TeamManagerPage() {
 				<TeamGenerator />
 				<TeamViewer teams={teams} />
 				<TeamSaveMenu />
+				<GroupViewer />
 			</TeamsContext.Provider>
 		</div>
 	);
