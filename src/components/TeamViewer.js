@@ -1,10 +1,7 @@
 import React from "react";
 import { generateKey } from "../Globals";
-import { useTeams } from "../routes/TeamManagerPage";
 
-export default function TeamViewer(props) {
-	const [teams] = useTeams();
-
+export default function TeamViewer({ teams }) {
 	return (
 		<div className="team-view-container">
 			{Object.keys(teams).map((team) => (
