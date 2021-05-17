@@ -10,11 +10,10 @@ export default function TeamSaveMenu() {
 			teamData[key] = teams[key].map((team) => team.rollno);
 		}
 
-		console.log(teamData);
-		const group = { groupName, teamData };
+		const group = { group: groupName, teams: teamData };
 
 		try {
-			const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/team`, {
+			const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/teams`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
@@ -22,8 +21,7 @@ export default function TeamSaveMenu() {
 				body: JSON.stringify(group),
 			});
 			if (response.ok) {
-				const data = await response.json();
-				console.log(data);
+				console.log(`Team Saved`);
 			}
 		} catch (error) {
 			console.log(error);
