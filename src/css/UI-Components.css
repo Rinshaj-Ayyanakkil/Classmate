@@ -466,7 +466,7 @@ select:focus {
 	text-align: center;
 }
 
-.items-list-container {
+.collapsible-fieldset {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -474,21 +474,21 @@ select:focus {
 	align-items: center;
 }
 
-.items-list-container.collapsed *:not(legend) {
+.collapsible-fieldset.collapsed *:not(legend) {
 	display: none;
 }
 
-.items-list-container legend {
+.collapsible-fieldset legend {
 	padding: 10px 20px;
 	border: 1px solid var(--text-primary);
 	cursor: pointer;
 }
 
-.items-list-container .switch {
+.collapsible-fieldset .switch {
 	margin: 10px;
 }
 
-.items-list-container .items-list {
+.collapsible-fieldset .items-list {
 	width: 100%;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, 10rem);
@@ -496,14 +496,14 @@ select:focus {
 	grid-row-gap: 10px;
 }
 
-.items-list-container .items-list .item-content {
+.collapsible-fieldset .items-list .item-content {
 	display: block;
 	cursor: pointer;
 	padding: 0.5rem;
 	background-color: var(--color-primary-dark);
 }
 
-.items-list-container .items-list .item-content.unchecked {
+.collapsible-fieldset .items-list .item-content.checked {
 	text-decoration: line-through;
 	font-style: italic;
 	color: gray;
