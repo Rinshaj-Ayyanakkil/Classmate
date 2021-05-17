@@ -1,34 +1,57 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import React, { useEffect, useState, useCallback } from "react";
-import { generateKey, getRandomNumber, shuffleArray } from "../Globals";
+import React, { useEffect, useState, useCallback, useContext } from "react";
+import { getRandomNumber, shuffleArray } from "../Globals";
 import { useStudents } from "../contexts/StudentsContext";
 import { useTeams } from "../routes/TeamManagerPage";
+import CollapsableFieldset from "./CollapsibleFieldset";
+
+const ItemContext = React.createContext();
+
+const useItems = () => {
+	return useContext(ItemContext);
+};
 
 export default function TeamGenerator({ onTeamGenerate }) {
 	const studentsData = useStudents();
-
-	const [students, setStudents] = useState([]);
-
+	const [items, setItems] = useState([]);
 	useEffect(() => {
-		setStudents(
+		setItems(
 			studentsData.map((student) => {
 				return {
-					rollno: student.rollNo,
-					name: student.name,
+					id: student.rollNo,
+					content: student.name,
 					isParticipating: true,
 				};
 			})
 		);
 	}, [studentsData]);
 
-	const [isAllStudentsChecked, setAllStudentsChecked] = useState(true);
+	// const toggleItemCrossed = (rollNo) => {
+	// 	const index = students.findIndex((student) => student.rollNo === rollNo);
+	// 	const temp = [...students];
+	// 	temp[index].isParticipating = !temp[index].isParticipating;
+	// 	setStudents([...temp]);
+	// };
 
-	const [, setTeams] = useTeams();
+	// const [isAllStudentsChecked, setAllStudentsChecked] = useState(true);
+	// useEffect(() => {
+	// 	setAllStudentsChecked(
+	// 		students.filter((student) => !student.isParticipating).length === 0
+	// 	);
+	// }, [students]);
 
-	const [isFieldsetCollapsed, setFieldsetCollapsed] = useState(false);
+	// const toggleAllItemsCrossed = () => {
+	// 	setAllStudentsChecked(!isAllStudentsChecked);
+	// 	setStudents(
+	// 		students.map((student) => ({
+	// 			...student,
+	// 			isParticipating: !isAllStudentsChecked,
+	// 		}))
+	// 	);
+	// };
+
 	const [userInput, setUserInput] = useState({ isTeamCount: true, value: 1 });
-
 	const handleInputChange = (event) => {
 		const [min, max, value] = [
 			Number(event.target.min),
@@ -41,29 +64,6 @@ export default function TeamGenerator({ onTeamGenerate }) {
 		if (value > max) return;
 
 		setUserInput({ ...userInput, value: value });
-	};
-
-	const toggleItemCrossed = (rollno) => {
-		const index = students.findIndex((student) => student.rollno === rollno);
-		const temp = [...students];
-		temp[index].isParticipating = !temp[index].isParticipating;
-		setStudents([...temp]);
-	};
-
-	useEffect(() => {
-		setAllStudentsChecked(
-			students.filter((student) => !student.isParticipating).length === 0
-		);
-	}, [students]);
-
-	const toggleAllItemsCrossed = () => {
-		setAllStudentsChecked(!isAllStudentsChecked);
-		setStudents(
-			students.map((student) => ({
-				...student,
-				isParticipating: !isAllStudentsChecked,
-			}))
-		);
 	};
 
 	// team generator function
@@ -99,87 +99,49 @@ export default function TeamGenerator({ onTeamGenerate }) {
 		return teamsList;
 	}, []);
 
+	const [, setTeams] = useTeams();
+
 	useEffect(
 		() =>
 			setTeams(
 				generateTeams(userInput.isTeamCount, userInput.value, [
-					...students.filter((students) => students.isParticipating),
+					...items.filter((item) => item.isParticipating),
 				])
 			),
-		[userInput, students, setTeams, generateTeams]
+		[userInput, items, setTeams, generateTeams]
 	);
 
 	return (
-		<div className="page-container">
-			<div className="team-generator-container">
-				<div className="toggle-input">
-					<div className="switch-wrapper">
-						<span>Minimum Member Count</span>
-						<label className="switch">
-							<input
-								type="checkbox"
-								checked={userInput.isTeamCount}
-								onChange={() =>
-									setUserInput({ ...userInput, isTeamCount: !userInput.isTeamCount })
-								}
-							/>
-							<span className="slider"></span>
-						</label>
-						<span>Team Count</span>
-					</div>
-
-					<label>
-						<input
-							type="number"
-							name="teamCount"
-							value={userInput.value}
-							onChange={handleInputChange}
-							min="1"
-							max={students.filter((students) => students.isParticipating).length}
-							required
-						/>
-					</label>
-				</div>
-
-				<fieldset
-					className={`items-list-container  ${
-						isFieldsetCollapsed ? `collapsed` : ``
-					}`}
-				>
-					<legend onClick={() => setFieldsetCollapsed(!isFieldsetCollapsed)}>
-						{isFieldsetCollapsed ? `SHOW` : `HIDE`}
-					</legend>
-
+		<div className="team-generator-container">
+			<div className="toggle-input">
+				<div className="switch-wrapper">
+					<span>Maximum Member Count</span>
 					<label className="switch">
 						<input
 							type="checkbox"
-							checked={isAllStudentsChecked}
-							onChange={toggleAllItemsCrossed}
+							checked={userInput.isTeamCount}
+							onChange={() =>
+								setUserInput({ ...userInput, isTeamCount: !userInput.isTeamCount })
+							}
 						/>
 						<span className="slider"></span>
 					</label>
+					<span>Team Count</span>
+				</div>
 
-					<div>
-						{students instanceof Array
-							? students.filter((student) => student.isParticipating).length
-							: `no`}
-					</div>
-
-					<div className="items-list">
-						{students.map((student) => (
-							<div
-								className={`item-content ${
-									!student.isParticipating ? `unchecked` : ``
-								}`}
-								key={generateKey(student.rollno)}
-								onClick={() => toggleItemCrossed(student.rollno)}
-							>
-								{student.name}
-							</div>
-						))}
-					</div>
-				</fieldset>
+				<label>
+					<input
+						type="number"
+						name="teamCount"
+						value={userInput.value}
+						onChange={handleInputChange}
+						min="1"
+						max={items.filter((item) => item.isParticipating).length}
+						required
+					/>
+				</label>
 			</div>
+			<CollapsableFieldset />
 		</div>
 	);
 }
