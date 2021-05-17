@@ -5,6 +5,7 @@ import { getRandomNumber, shuffleArray } from "../Globals";
 import { useStudents } from "../contexts/StudentsContext";
 import { useTeams } from "../routes/TeamManagerPage";
 import CollapsableFieldset from "./CollapsibleFieldset";
+import SliderSwitch from "./SliderSwitch";
 
 const ItemContext = React.createContext();
 
@@ -90,21 +91,12 @@ export default function TeamGenerator({ onTeamGenerate }) {
 	return (
 		<div className="team-generator-container">
 			<div className="toggle-input">
-				<div className="switch-wrapper">
-					<span>Maximum Member Count</span>
-					<label className="switch">
-						<input
-							type="checkbox"
-							checked={userInput.isTeamCount}
-							onChange={() =>
-								setUserInput({ ...userInput, isTeamCount: !userInput.isTeamCount })
-							}
-						/>
-						<span className="slider"></span>
-					</label>
-					<span>Team Count</span>
-				</div>
-
+				<SliderSwitch
+					isChecked={userInput.isTeamCount}
+					onChange={() =>
+						setUserInput({ ...userInput, isTeamCount: !userInput.isTeamCount })
+					}
+				/>
 				<label>
 					<input
 						type="number"
