@@ -9,9 +9,7 @@ export default function TeamViewer({ teams }) {
 					<h3>{`${team} ( ${teams[team].length} )`}</h3>
 					<ul>
 						{teams[team].map((member) => (
-							<li
-								key={generateKey(member.rollno)}
-							>{`${member.rollno}. ${member.name}`}</li>
+							<li key={generateKey(member.id)}>{`${member.id}. ${member.content}`}</li>
 						))}
 					</ul>
 				</div>
