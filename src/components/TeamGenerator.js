@@ -8,7 +8,7 @@ import CollapsableFieldset from "./CollapsibleFieldset";
 
 const ItemContext = React.createContext();
 
-const useItems = () => {
+export const useItems = () => {
 	return useContext(ItemContext);
 };
 
@@ -26,30 +26,6 @@ export default function TeamGenerator({ onTeamGenerate }) {
 			})
 		);
 	}, [studentsData]);
-
-	// const toggleItemCrossed = (rollNo) => {
-	// 	const index = students.findIndex((student) => student.rollNo === rollNo);
-	// 	const temp = [...students];
-	// 	temp[index].isParticipating = !temp[index].isParticipating;
-	// 	setStudents([...temp]);
-	// };
-
-	// const [isAllStudentsChecked, setAllStudentsChecked] = useState(true);
-	// useEffect(() => {
-	// 	setAllStudentsChecked(
-	// 		students.filter((student) => !student.isParticipating).length === 0
-	// 	);
-	// }, [students]);
-
-	// const toggleAllItemsCrossed = () => {
-	// 	setAllStudentsChecked(!isAllStudentsChecked);
-	// 	setStudents(
-	// 		students.map((student) => ({
-	// 			...student,
-	// 			isParticipating: !isAllStudentsChecked,
-	// 		}))
-	// 	);
-	// };
 
 	const [userInput, setUserInput] = useState({ isTeamCount: true, value: 1 });
 	const handleInputChange = (event) => {
@@ -141,7 +117,9 @@ export default function TeamGenerator({ onTeamGenerate }) {
 					/>
 				</label>
 			</div>
-			<CollapsableFieldset />
+			<ItemContext.Provider value={[items, setItems]}>
+				<CollapsableFieldset />
+			</ItemContext.Provider>
 		</div>
 	);
 }
