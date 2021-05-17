@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 
 const useFetch = (url, options) => {
-	const [response, setResponse] = useState(null);
-	const [isLoading, setLoading] = useState(true);
+	const [response, setResponse] = useState();
+	const [isLoading, setLoading] = useState(false);
 
 	const fetchData = useCallback(async () => {
+		setLoading(true);
 		try {
 			const res = await fetch(url, options);
 			const data = await res.json();
@@ -12,6 +13,8 @@ const useFetch = (url, options) => {
 			setLoading(false);
 		} catch (error) {
 			setResponse(null);
+		} finally {
+			setLoading(false);
 		}
 	}, [url, options]);
 
@@ -19,7 +22,7 @@ const useFetch = (url, options) => {
 		fetchData();
 	}, [fetchData]);
 
-	return [response, isLoading];
+	return [response, isLoading, fetchData];
 };
 
 export default useFetch;
