@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
+import { useItems } from "./TeamGenerator";
 
-export default function CollapsableFieldset({ items }) {
+export default function CollapsableFieldset() {
+	const [itemList, setItemList] = useItems();
+
 	const [isFieldsetCollapsed, setFieldsetCollapsed] = useState(false);
-	const [itemList, setItemList] = useState(items);
-	const [isAllChecked, setAllChecked] = useState(false);
+	const [isAllParticipating, setAllParticipating] = useState(true);
 
 	useEffect(() => {
-		setAllChecked(!itemList.every((item) => item.isChecked));
-		console.log(`itemList changed`);
+		setAllParticipating(itemList.every((item) => item.isParticipating));
 	}, [itemList]);
 
 	const toggleAllChecked = () => {
-		setAllChecked((boolean) => !boolean);
+		setAllParticipating(!isAllParticipating);
 		setItemList(
-			itemList.map((item) => {
-				return { ...item, isChecked: isAllChecked };
-			})
+			itemList.map((item) => ({
+				...item,
+				isParticipating: !isAllParticipating,
+			}))
 		);
 	};
 
@@ -24,7 +26,7 @@ export default function CollapsableFieldset({ items }) {
 		setItemList(
 			itemList.map((item) => {
 				return item.id === id
-					? { ...item, isChecked: !item.isChecked }
+					? { ...item, isParticipating: !item.isParticipating }
 					: { ...item };
 			})
 		);
@@ -41,7 +43,7 @@ export default function CollapsableFieldset({ items }) {
 			<label className="switch">
 				<input
 					type="checkbox"
-					checked={!isAllChecked}
+					checked={isAllParticipating}
 					onChange={toggleAllChecked}
 				/>
 				<span className="slider"></span>
@@ -50,7 +52,7 @@ export default function CollapsableFieldset({ items }) {
 			<div className="items-list">
 				{itemList.map((item) => (
 					<div
-						className={`item-content ${item.isChecked && `checked`}`}
+						className={`item-content ${!item.isParticipating && `checked`}`}
 						onClick={() => toggleItemCheck(item.id)}
 						key={generateKey(item.id)}
 					>
