@@ -13,7 +13,7 @@ export const useItems = () => {
 	return useContext(ItemContext);
 };
 
-export default function TeamGenerator({ onTeamGenerate }) {
+export default function TeamGenerator() {
 	const studentsData = useStudents();
 	const [items, setItems] = useState([]);
 	useEffect(() => {
