@@ -3,6 +3,7 @@ import GroupViewer from "../components/GroupViewer";
 import TeamGenerator from "../components/TeamGenerator";
 import TeamSaveMenu from "../components/TeamSaveMenu";
 import TeamViewer from "../components/TeamViewer";
+import TeamCreator from "../components/TeamCreator";
 
 const TeamsContext = React.createContext();
 
@@ -15,8 +16,9 @@ export default function TeamManagerPage() {
 
 	return (
 		<div className="page-container">
-			<h1>Team Generator</h1>
+			<h1>Team Manager</h1>
 			<TeamsContext.Provider value={[teams, setTeams]}>
+				<TeamCreator />
 				<TeamGenerator />
 				<TeamViewer teams={teams} />
 				<TeamSaveMenu />
