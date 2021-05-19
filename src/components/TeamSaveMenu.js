@@ -7,7 +7,7 @@ export default function TeamSaveMenu() {
 	const saveTeams = async () => {
 		const teamData = {};
 		for (const key in teams) {
-			teamData[key] = teams[key].map((team) => team.rollno);
+			teamData[key] = teams[key].map((team) => team.id);
 		}
 
 		const group = { group: groupName, teams: teamData };
