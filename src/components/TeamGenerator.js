@@ -1,33 +1,12 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import React, { useEffect, useState, useCallback, useContext } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { getRandomNumber, shuffleArray } from "../Globals";
-import { useStudents } from "../contexts/StudentsContext";
-import { useTeams } from "../routes/TeamManagerPage";
+import { useItems, useTeams } from "../routes/TeamManagerPage";
 import CollapsableFieldset from "./CollapsibleFieldset";
 import SliderSwitch from "./SliderSwitch";
 
-const ItemContext = React.createContext();
-
-export const useItems = () => {
-	return useContext(ItemContext);
-};
-
 export default function TeamGenerator() {
-	const studentsData = useStudents();
-	const [items, setItems] = useState([]);
-	useEffect(() => {
-		setItems(
-			studentsData.map((student) => {
-				return {
-					id: student.rollNo,
-					content: student.name,
-					isParticipating: true,
-				};
-			})
-		);
-	}, [studentsData]);
-
 	const [userInput, setUserInput] = useState({ isTeamCount: true, value: 1 });
 	const handleInputChange = (event) => {
 		const [min, max, value] = [
@@ -43,6 +22,7 @@ export default function TeamGenerator() {
 		setUserInput({ ...userInput, value: value });
 	};
 
+	const [items] = useItems();
 	// team generator function
 	const generateTeams = useCallback((isTeamCount, value, items) => {
 		const teamCount = isTeamCount ? value : Math.ceil(items.length / value);
@@ -109,9 +89,7 @@ export default function TeamGenerator() {
 					/>
 				</label>
 			</div>
-			<ItemContext.Provider value={[items, setItems]}>
-				<CollapsableFieldset />
-			</ItemContext.Provider>
+			<CollapsableFieldset />
 		</div>
 	);
 }

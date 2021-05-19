@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
-import { useItems } from "./TeamGenerator";
+import { useItems } from "../routes/TeamManagerPage";
 
 export default function CollapsableFieldset() {
 	const [itemList, setItemList] = useItems();
