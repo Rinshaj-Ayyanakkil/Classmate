@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { generateKey } from "../Globals";
 import { useItems } from "../routes/TeamManagerPage";
 export default function TeamCreator() {
 	const [teamCards, setTeamCards] = useState([]);
-	const [items] = useItems();
+	let [items] = useItems();
+	let dropZone = null;
 
 	const addTeamCard = () => {
 		if (
@@ -12,39 +13,46 @@ export default function TeamCreator() {
 		)
 			return;
 		const newTeamCard = {
-			id: teamCards.length + 1,
+			// id: teamCards.length + 1,
 			title: `Team ${teamCards.length + 1}`,
 			members: [],
 		};
 		setTeamCards((curr) => [...curr, newTeamCard]);
 	};
 
-	const handleDragStart = (id) => {
+	const handleDragStart = (e, id) => {
+		e.stopPropagation();
 		console.log(`dragging ${id}`);
 		const draggedItem = items.find((item) => item.id === id);
 		draggedItem.isDragging = true;
 	};
 
 	const handleDragEnd = (e, id) => {
+		e.preventDefault();
 		e.stopPropagation();
 		console.log(`drag ended for ${id}`);
 		const draggedItem = items.find((item) => item.id === id);
-		draggedItem.isDragging = false;
-		console.log(draggedItem.isDragging);
+
+		if (teamCards.includes(dropZone) && !dropZone.members.includes(draggedItem)) {
+			const members = dropZone.members;
+			members.push(draggedItem);
+			setTeamCards((cards) =>
+				cards.map((card) =>
+					card === dropZone ? { ...card, members: [...members] } : card
+				)
+			);
+			console.log(`${draggedItem.id} added to ${dropZone.title}`);
+			items = items.filter((item) => item.id !== draggedItem.id);
+			console.log(`new items: ${items.length}`);
+		}
 	};
 
-	const handleDragOver = (card) => {
+	const handleDragEnter = (e, card) => {
+		e.preventDefault();
+		e.stopPropagation();
 		const targetCard = teamCards.find((teamCard) => teamCard.title === card);
-		const draggedItem = items.find((item) => item.isDragging);
 
-		const members = new Set(targetCard.members);
-		members.add(draggedItem);
-
-		setTeamCards((cards) =>
-			cards.map((card) =>
-				card === targetCard ? { ...card, members: [...members] } : card
-			)
-		);
+		dropZone = targetCard;
 	};
 
 	return (
@@ -56,7 +64,7 @@ export default function TeamCreator() {
 							key={generateKey(item.id)}
 							className="item-content"
 							draggable="true"
-							onDragStart={() => handleDragStart(item.id)}
+							onDragStart={(e) => handleDragStart(e, item.id)}
 							onDragEnd={(e) => handleDragEnd(e, item.id)}
 						>
 							{item.content}
@@ -69,7 +77,7 @@ export default function TeamCreator() {
 					<div
 						key={generateKey(teamCard.title)}
 						className="team-card"
-						onDragOver={() => handleDragOver(teamCard.title)}
+						onDragEnter={(e) => handleDragEnter(e, teamCard.title)}
 					>
 						<div className="title">{teamCard.title}</div>
 						{teamCard.members.map((member) => (
