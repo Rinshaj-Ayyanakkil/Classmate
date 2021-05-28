@@ -40,7 +40,7 @@ export default function TeamManagerPage() {
 			<h1>Team Manager</h1>
 			<TeamsContext.Provider value={[teams, setTeams]}>
 				<ItemContext.Provider value={[items, setItems]}>
-					<TeamCreator />
+					{items.length !== 0 && <TeamCreator itemList={items} />}
 					<TeamGenerator />
 					<TeamViewer teams={teams} />
 					<TeamSaveMenu />
