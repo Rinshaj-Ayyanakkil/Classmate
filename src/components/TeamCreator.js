@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { generateKey } from "../Globals";
-import { useItems } from "../routes/TeamManagerPage";
-export default function TeamCreator() {
+export default function TeamCreator({ itemList }) {
 	const [teamCards, setTeamCards] = useState([]);
-	let [items] = useItems();
-	let dropZone = null;
+	const [items, setItems] = useState(itemList);
+
+	let dropZone = undefined;
 
 	const addTeamCard = () => {
 		if (
@@ -13,7 +13,7 @@ export default function TeamCreator() {
 		)
 			return;
 		const newTeamCard = {
-			// id: teamCards.length + 1,
+			id: teamCards.length + 1,
 			title: `Team ${teamCards.length + 1}`,
 			members: [],
 		};
@@ -21,6 +21,7 @@ export default function TeamCreator() {
 	};
 
 	const handleDragStart = (e, id) => {
+		// e.preventDefault();
 		e.stopPropagation();
 		console.log(`dragging ${id}`);
 		const draggedItem = items.find((item) => item.id === id);
@@ -32,7 +33,6 @@ export default function TeamCreator() {
 		e.stopPropagation();
 		console.log(`drag ended for ${id}`);
 		const draggedItem = items.find((item) => item.id === id);
-
 		if (teamCards.includes(dropZone) && !dropZone.members.includes(draggedItem)) {
 			const members = dropZone.members;
 			members.push(draggedItem);
@@ -42,16 +42,16 @@ export default function TeamCreator() {
 				)
 			);
 			console.log(`${draggedItem.id} added to ${dropZone.title}`);
-			items = items.filter((item) => item.id !== draggedItem.id);
+			setItems(items.filter((item) => item !== draggedItem));
 			console.log(`new items: ${items.length}`);
 		}
 	};
 
-	const handleDragEnter = (e, card) => {
+	const handleDragEnter = (e, id) => {
 		e.preventDefault();
 		e.stopPropagation();
-		const targetCard = teamCards.find((teamCard) => teamCard.title === card);
-
+		const targetCard = teamCards.find((teamCard) => teamCard.id === id);
+		console.log(`entering: team ${id}`);
 		dropZone = targetCard;
 	};
 
@@ -75,9 +75,9 @@ export default function TeamCreator() {
 			<div className="team-cards-container">
 				{teamCards.map((teamCard) => (
 					<div
-						key={generateKey(teamCard.title)}
+						key={generateKey(teamCard.id)}
 						className="team-card"
-						onDragEnter={(e) => handleDragEnter(e, teamCard.title)}
+						onDragEnter={(e) => handleDragEnter(e, teamCard.id)}
 					>
 						<div className="title">{teamCard.title}</div>
 						{teamCard.members.map((member) => (
