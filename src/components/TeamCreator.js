@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
 export default function TeamCreator({ itemList }) {
 	const [teamCards, setTeamCards] = useState([]);
-	const [items, setItems] = useState(itemList);
+	const [items, setItems] = useState(() =>
+		itemList.map((item) => {
+			return { ...item, assignedTeam: null };
+		})
+	);
 
 	let dropZone = undefined;
 
@@ -20,56 +24,53 @@ export default function TeamCreator({ itemList }) {
 		setTeamCards((curr) => [...curr, newTeamCard]);
 	};
 
-	const handleDragStart = (e, id) => {
-		// e.preventDefault();
-		e.stopPropagation();
-		console.log(`dragging ${id}`);
-		const draggedItem = items.find((item) => item.id === id);
-		draggedItem.isDragging = true;
-	};
-
 	const handleDragEnd = (e, id) => {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log(`drag ended for ${id}`);
+
 		const draggedItem = items.find((item) => item.id === id);
-		if (teamCards.includes(dropZone) && !dropZone.members.includes(draggedItem)) {
-			const members = dropZone.members;
-			members.push(draggedItem);
-			setTeamCards((cards) =>
-				cards.map((card) =>
-					card === dropZone ? { ...card, members: [...members] } : card
-				)
-			);
-			console.log(`${draggedItem.id} added to ${dropZone.title}`);
-			setItems(items.filter((item) => item !== draggedItem));
-			console.log(`new items: ${items.length}`);
-		}
+
+		setItems(
+			items.map((item) =>
+				item === draggedItem ? { ...item, assignedTeam: dropZone?.id } : item
+			)
+		);
 	};
+
+	useEffect(() => {
+		setTeamCards((teamCards) =>
+			teamCards.map((team) => {
+				return {
+					...team,
+					members: [...items.filter((item) => item.assignedTeam === team.id)],
+				};
+			})
+		);
+	}, [items]);
 
 	const handleDragEnter = (e, id) => {
 		e.preventDefault();
 		e.stopPropagation();
 		const targetCard = teamCards.find((teamCard) => teamCard.id === id);
-		console.log(`entering: team ${id}`);
 		dropZone = targetCard;
 	};
 
 	return (
 		<div className="team-creator-container">
-			<div className="items-list">
-				{items &&
-					items.map((item) => (
-						<div
-							key={generateKey(item.id)}
-							className="item-content"
-							draggable="true"
-							onDragStart={(e) => handleDragStart(e, item.id)}
-							onDragEnd={(e) => handleDragEnd(e, item.id)}
-						>
-							{item.content}
-						</div>
-					))}
+			<div className="items-list" onDragEnter={(e) => handleDragEnter(e)}>
+				{items.map(
+					(item) =>
+						!item.assignedTeam && (
+							<div
+								key={generateKey(item.id)}
+								className="item-content"
+								draggable="true"
+								onDragEnd={(e) => handleDragEnd(e, item.id)}
+							>
+								{item.content}
+							</div>
+						)
+				)}
 			</div>
 
 			<div className="team-cards-container">
@@ -79,9 +80,17 @@ export default function TeamCreator({ itemList }) {
 						className="team-card"
 						onDragEnter={(e) => handleDragEnter(e, teamCard.id)}
 					>
-						<div className="title">{teamCard.title}</div>
+						<div className="title">
+							<h3>{teamCard.title}</h3>
+							<p>{teamCard.members.length}</p>
+						</div>
 						{teamCard.members.map((member) => (
-							<div key={generateKey(member)} className="members">
+							<div
+								key={generateKey(member)}
+								className="member"
+								draggable="true"
+								onDragEnd={(e) => handleDragEnd(e, member.id)}
+							>
 								{member.content}
 							</div>
 						))}
