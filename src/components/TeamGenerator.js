@@ -87,6 +87,8 @@ export default function TeamGenerator({ itemList }) {
 					onChange={() =>
 						setUserInput({ ...userInput, isTeamCount: !userInput.isTeamCount })
 					}
+					dataOn="Team Count"
+					dataOff="Maximum Member Count"
 				/>
 				<label>
 					<input

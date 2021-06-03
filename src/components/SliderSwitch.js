@@ -1,14 +1,14 @@
 import React from "react";
 
-export default function SliderSwitch({ isChecked, onChange }) {
+export default function SliderSwitch({ isChecked, onChange, dataOn, dataOff }) {
 	return (
 		<div className="switch-wrapper">
-			<span>Maximum Member Count</span>
+			<span>{dataOff}</span>
 			<label className="switch">
 				<input type="checkbox" checked={isChecked} onChange={onChange} />
 				<span className="slider"></span>
 			</label>
-			<span>Team Count</span>
+			<span>{dataOn}</span>
 		</div>
 	);
 }
