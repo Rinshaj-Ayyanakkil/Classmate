@@ -410,6 +410,7 @@ select:focus {
 
 .team-generator-container {
 	position: relative;
+	border: 1px solid var(--text-primary);
 }
 
 .team-generator-container .toggle-input {
