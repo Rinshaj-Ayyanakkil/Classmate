@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
 import { useItems } from "./TeamGenerator";
+import SliderSwitch from "./SliderSwitch";
 
 export default function CollapsableFieldset({ itemList }) {
 	const [items, setItems] = useItems();
@@ -40,14 +41,7 @@ export default function CollapsableFieldset({ itemList }) {
 				{isFieldsetCollapsed ? `SHOW` : `HIDE`}
 			</legend>
 
-			<label className="switch">
-				<input
-					type="checkbox"
-					checked={isAllParticipating}
-					onChange={toggleAllChecked}
-				/>
-				<span className="slider"></span>
-			</label>
+			<SliderSwitch isChecked={isAllParticipating} onChange={toggleAllChecked} />
 
 			<div className="items-list">
 				{items.map((item) => (
