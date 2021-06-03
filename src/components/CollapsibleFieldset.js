@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
-import { useItems } from "../routes/TeamManagerPage";
+import { useItems } from "./TeamGenerator";
 
-export default function CollapsableFieldset() {
-	const [itemList, setItemList] = useItems();
+export default function CollapsableFieldset({ itemList }) {
+	const [items, setItems] = useItems();
 
 	const [isFieldsetCollapsed, setFieldsetCollapsed] = useState(false);
 	const [isAllParticipating, setAllParticipating] = useState(true);
 
 	useEffect(() => {
-		setAllParticipating(itemList.every((item) => item.isParticipating));
-	}, [itemList]);
+		setAllParticipating(items.every((item) => item.isParticipating));
+	}, [items]);
 
 	const toggleAllChecked = () => {
 		setAllParticipating(!isAllParticipating);
-		setItemList(
-			itemList.map((item) => ({
+		setItems(
+			items.map((item) => ({
 				...item,
 				isParticipating: !isAllParticipating,
 			}))
@@ -23,8 +23,8 @@ export default function CollapsableFieldset() {
 	};
 
 	const toggleItemCheck = (id) => {
-		setItemList(
-			itemList.map((item) => {
+		setItems(
+			items.map((item) => {
 				return item.id === id
 					? { ...item, isParticipating: !item.isParticipating }
 					: { ...item };
@@ -50,7 +50,7 @@ export default function CollapsableFieldset() {
 			</label>
 
 			<div className="items-list">
-				{itemList.map((item) => (
+				{items.map((item) => (
 					<div
 						className={`item-content ${!item.isParticipating && `checked`}`}
 						onClick={() => toggleItemCheck(item.id)}

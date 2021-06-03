@@ -12,12 +12,6 @@ export const useTeams = () => {
 	return useContext(TeamsContext);
 };
 
-const ItemContext = React.createContext();
-
-export const useItems = () => {
-	return useContext(ItemContext);
-};
-
 export default function TeamManagerPage() {
 	const [teams, setTeams] = useState({});
 
@@ -29,7 +23,6 @@ export default function TeamManagerPage() {
 				return {
 					id: student.rollNo,
 					content: student.name,
-					isParticipating: true,
 				};
 			})
 		);
@@ -39,13 +32,11 @@ export default function TeamManagerPage() {
 		<div className="page-container">
 			<h1>Team Manager</h1>
 			<TeamsContext.Provider value={[teams, setTeams]}>
-				<ItemContext.Provider value={[items, setItems]}>
-					{items.length !== 0 && <TeamCreator itemList={items} />}
-					<TeamGenerator />
-					<TeamViewer teams={teams} />
-					<TeamSaveMenu />
-					<GroupViewer />
-				</ItemContext.Provider>
+				{items.length !== 0 && <TeamCreator itemList={items} />}
+				{items.length !== 0 && <TeamGenerator itemList={items} />}
+				<TeamViewer teams={teams} />
+				<TeamSaveMenu />
+				<GroupViewer />
 			</TeamsContext.Provider>
 		</div>
 	);

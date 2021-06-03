@@ -1,12 +1,18 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { getRandomNumber, shuffleArray } from "../Globals";
-import { useItems, useTeams } from "../routes/TeamManagerPage";
+import { useTeams } from "../routes/TeamManagerPage";
 import CollapsableFieldset from "./CollapsibleFieldset";
 import SliderSwitch from "./SliderSwitch";
 
-export default function TeamGenerator() {
+const ItemsContext = React.createContext();
+
+export const useItems = () => {
+	return useContext(ItemsContext);
+};
+
+export default function TeamGenerator({ itemList }) {
 	const [userInput, setUserInput] = useState({ isTeamCount: true, value: 1 });
 	const handleInputChange = (event) => {
 		const [min, max, value] = [
@@ -22,7 +28,12 @@ export default function TeamGenerator() {
 		setUserInput({ ...userInput, value: value });
 	};
 
-	const [items] = useItems();
+	const [items, setItems] = useState(() =>
+		itemList.map((item) => {
+			return { ...item, isParticipating: true };
+		})
+	);
+
 	// team generator function
 	const generateTeams = useCallback((isTeamCount, value, items) => {
 		const teamCount = isTeamCount ? value : Math.ceil(items.length / value);
@@ -89,7 +100,9 @@ export default function TeamGenerator() {
 					/>
 				</label>
 			</div>
-			<CollapsableFieldset />
+			<ItemsContext.Provider value={[items, setItems]}>
+				<CollapsableFieldset itemList={items} />
+			</ItemsContext.Provider>
 		</div>
 	);
 }
