@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
+import { useTeams } from "../routes/TeamManagerPage";
 export default function TeamCreator({ itemList }) {
 	const [teamCards, setTeamCards] = useState([]);
 	const [items, setItems] = useState(() =>
@@ -7,6 +8,12 @@ export default function TeamCreator({ itemList }) {
 			return { ...item, assignedTeam: null };
 		})
 	);
+
+	const [, setTeams] = useTeams();
+
+	useEffect(() => {
+		setTeams(teamCards);
+	}, [teamCards, setTeams]);
 
 	let dropZone = undefined;
 

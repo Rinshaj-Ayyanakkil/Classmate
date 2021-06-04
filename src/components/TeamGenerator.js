@@ -41,30 +41,31 @@ export default function TeamGenerator({ itemList }) {
 
 		if (teamCount === Infinity || memberCount === Infinity) return {};
 
-		let teamsList = {};
+		let teams = [];
 
 		for (let i = 0; i < teamCount; i++) {
-			const currTeam = [];
+			const members = [];
 			for (let j = 0; j < memberCount; j++) {
 				if (items.length === 0) break;
 				shuffleArray(items);
 				const randomIndex = getRandomNumber(0, items.length - 1);
 				const randomItem = items[randomIndex];
-				currTeam.push(randomItem);
+				members.push(randomItem);
 				items = items.filter((item) => item !== randomItem);
 			}
-			if (currTeam.length === 0) break;
-			teamsList = { ...teamsList, [`team ${i + 1}`]: currTeam };
+			if (members.length === 0) break;
+			const newTeam = { id: i + 1, title: `Team ${i + 1}`, members: members };
+			teams.push(newTeam);
 		}
 
-		if (isTeamCount) {
-			for (let [key] of Object.entries(teamsList)) {
-				if (items.length === 0) break;
-				teamsList[key].push(items.pop());
-			}
-		}
+		//assigning leftover items evenly to existing teams
+		teams.every((team) => {
+			if (items.length === 0) return false;
+			team.members.push(items.pop());
+			return true;
+		});
 
-		return teamsList;
+		return teams;
 	}, []);
 
 	const [, setTeams] = useTeams();

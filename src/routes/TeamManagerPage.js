@@ -15,7 +15,7 @@ export const useTeams = () => {
 
 export default function TeamManagerPage() {
 	const [isAutoGeneration, setAutoGeneration] = useState(false);
-	const [teams, setTeams] = useState({});
+	const [teams, setTeams] = useState([]);
 
 	const studentsData = useStudents();
 	const [items, setItems] = useState([]);
