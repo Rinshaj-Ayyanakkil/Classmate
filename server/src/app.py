@@ -1,9 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Api, Resource, abort, marshal, reqparse, fields, marshal_with
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from sqlalchemy import engine
 from models import db, StudentModel, LoginModel
 
 app = Flask(__name__)
@@ -100,7 +98,8 @@ class Login(Resource):
         login = LoginModel(roll_number=roll_number, username=username, password=hashed_password)
         db.session.add(login)
         db.session.commit()
-        return {"user_id": login.user_id}, 201
+        response = marshal(login, login_fields)
+        return {k: v for k, v in response.items() if k in ("id, isAdmin")}, 200
 
 
 api.add_resource(Students, "/students")
