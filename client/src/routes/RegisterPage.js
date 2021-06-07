@@ -16,13 +16,20 @@ export default function RegisterPage({ setAuth }) {
 					body: JSON.stringify({ ...formData }),
 				}
 			);
+
+			if (response.ok) {
+				setRegisterError(null);
+
+				// const data = response.json()
+				setAuth(true);
+				return;
+			}
 			if (response.status === 409) {
 				setRegisterError("Student is already registered");
 				return;
 			}
 
-			setRegisterError(null);
-			setAuth(true);
+			throw new Error("Unexpected Error");
 		} catch (error) {
 			setRegisterError("Sorry, couldn't connect to Database");
 		}

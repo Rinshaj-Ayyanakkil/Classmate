@@ -14,20 +14,26 @@ export default function LoginPage({ setAuth }) {
 				},
 				body: JSON.stringify({ username: username, password: password }),
 			});
-			const data = await response.json();
 
-			if (!data.user) {
+			if (response.ok) {
+				setLoginError(null);
+
+				// const data = await response.json();
+				setAuth(true);
+				return;
+			}
+
+			if (response.status === 404) {
 				setLoginError("user not found");
 				return;
 			}
 
-			if (!data.user.type) {
+			if (response.status === 409) {
 				setLoginError("incorrect password");
 				return;
 			}
 
-			setLoginError(null);
-			setAuth(true);
+			throw new Error("Unexpected Error");
 		} catch (error) {
 			setLoginError("Sorry, something went wrong");
 		}
