@@ -1,0 +1,29 @@
+POST   http://localhost:5000/login
+content-type: application/json
+
+{
+    "username": "fazal",
+    "password": "fazalfazal"
+}
+
+###
+
+PUT   http://localhost:5000/login
+content-type: application/json
+
+{
+    "studentId": 23,
+    "username": "aathira",
+    "password": "aathiraaathira"
+}
+
+###
+
+GET   http://localhost:5000/students
+content-type: application/json
+
+###
+
+GET   http://localhost:5000/groups
+content-type: application/json
+
