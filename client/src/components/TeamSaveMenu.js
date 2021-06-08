@@ -5,23 +5,28 @@ export default function TeamSaveMenu() {
 	const [groupName, setGroupName] = useState(``);
 
 	const saveTeams = async () => {
-		const teamData = {};
-		for (const key in teams) {
-			teamData[key] = teams[key].map((team) => team.id);
-		}
-
-		const group = { group: groupName, teams: teamData };
+		const group = {
+			title: groupName,
+			teams: teams.map((team) => {
+				return {
+					...team,
+					members: team.members.map((member) => {
+						return { roll_number: member.id };
+					}),
+				};
+			}),
+		};
 
 		try {
-			const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/teams`, {
-				method: "POST",
+			const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/groups`, {
+				method: "PUT",
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
 				},
-				body: JSON.stringify(group),
+				body: JSON.stringify({ group: group }),
 			});
 			if (response.ok) {
-				console.log(`Team Saved`);
+				window.alert(`Team Saved`);
 			}
 		} catch (error) {
 			console.log(error);
