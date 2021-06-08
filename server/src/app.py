@@ -1,3 +1,4 @@
+from operator import attrgetter
 from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Api, Resource, abort, marshal, reqparse, fields, marshal_with
@@ -107,7 +108,7 @@ groups_parser = reqparse.RequestParser(bundle_errors=True)
 groups_parser.add_argument("group", type=dict, help="username is required", required=True, location="json")
 
 team_member_fields = {
-    "id": fields.Integer,
+    "id": fields.Integer(attribute="roll_number"),
     "content": fields.String(
         attribute=lambda x: StudentModel.query.filter(StudentModel.roll_number == x.roll_number).first().name
     ),
