@@ -2,13 +2,14 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Api, Resource, abort, marshal, reqparse, fields, marshal_with
 from flask_bcrypt import Bcrypt
-from models import db, StudentModel, LoginModel
+from models import db, StudentModel, LoginModel, GroupModel, TeamModel, TeamMemberModel
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 bcrypt = Bcrypt(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://rinshaj:@localhost/classmate"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 api = Api(app)
@@ -102,8 +103,59 @@ class Login(Resource):
         return {k: v for k, v in response.items() if k in ("id, isAdmin")}, 200
 
 
+groups_parser = reqparse.RequestParser(bundle_errors=True)
+groups_parser.add_argument("group", type=dict, help="username is required", required=True, location="json")
+
+team_member_fields = {
+    "id": fields.Integer,
+    "content": fields.String(
+        attribute=lambda x: StudentModel.query.filter(StudentModel.roll_number == x.roll_number).first().name
+    ),
+}
+
+team_fields = {
+    "id": fields.Integer,
+    "title": fields.String,
+    "members": fields.List(fields.Nested(team_member_fields), attribute="team_members"),
+}
+
+group_fields = {
+    "id": fields.Integer,
+    "title": fields.String,
+    "teams": fields.List(fields.Nested(team_fields)),
+}
+
+
+class Groups(Resource):
+    @marshal_with(group_fields, envelope="groups")
+    def get(self):
+        groups = GroupModel.query.all()
+        return groups
+
+    def put(self):
+        args = groups_parser.parse_args()
+        group = args["group"]
+        teams = []
+        for team in group["teams"]:
+            members = []
+            for member in team["members"]:
+                new_member = TeamMemberModel(roll_number=member["roll_number"])
+                members.append(new_member)
+            new_team = TeamModel(title=team["title"], team_members=members)
+            teams.append(new_team)
+        new_group = GroupModel(title=group["title"], teams=teams)
+        try:
+            db.session.add(new_group)
+            db.session.commit()
+            return str(new_group)
+        except Exception as e:
+            print(e)
+            abort(500, message="db failed")
+
+
 api.add_resource(Students, "/students")
 api.add_resource(Login, "/login")
+api.add_resource(Groups, "/groups")
 
 
 if __name__ == "__main__":
