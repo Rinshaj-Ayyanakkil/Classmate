@@ -296,11 +296,6 @@ select:focus {
 	padding: 10px 0;
 }
 
-.form-box .error::before {
-	content: "*";
-	padding: inherit;
-}
-
 .form-box .link {
 	display: block;
 	align-self: flex-start;
