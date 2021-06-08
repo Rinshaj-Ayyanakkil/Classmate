@@ -35,7 +35,7 @@ class GroupModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
-    teams = db.relationship("TeamModel", back_ref="groups_info", lazy="dynamic")
+    teams = db.relationship("TeamModel", backref="groups_info", lazy="dynamic")
 
 
 class TeamModel(db.Model):
@@ -44,7 +44,7 @@ class TeamModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey("groups_info.id"), nullable=False)
-    team_members = db.relationship("TeamMemberModel", back_ref="teams_info", lazy="dynamic")
+    team_members = db.relationship("TeamMemberModel", backref="teams_info", lazy="dynamic")
 
 
 class TeamMemberModel(db.Model):
