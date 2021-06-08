@@ -1,12 +1,31 @@
 import React, { useState } from "react";
 import { useTeams } from "../routes/TeamManagerPage";
+import useForm from "../hooks/useForm";
+
 export default function TeamSaveMenu() {
 	const [teams] = useTeams();
-	const [groupName, setGroupName] = useState(``);
+	const [isLoading, setLoading] = useState(false);
 
-	const saveTeams = async () => {
+	const formFields = {
+		groupName: {
+			value: ``,
+			validations: [
+				{ pattern: /^.{1,}$/, message: `group name cant be empty` },
+				{
+					pattern: /^.{1,250}$/,
+					message: `name too large`,
+				},
+			],
+		},
+	};
+	const [formInputs, changeFormInputs, formErrors] = useForm(formFields);
+
+	const saveTeams = async (event) => {
+		event.preventDefault();
+
+		setLoading(true);
 		const group = {
-			title: groupName,
+			title: formInputs.groupName,
 			teams: teams.map((team) => {
 				return {
 					...team,
@@ -30,18 +49,31 @@ export default function TeamSaveMenu() {
 			}
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	return (
 		<div className="team-save-menu">
-			<input
-				name="groupName"
-				placeholder="Group Name"
-				value={groupName}
-				onChange={(e) => setGroupName(e.target.value)}
-			/>
-			<button onClick={saveTeams}>Save</button>
+			<div className="header">
+				<h1>Save Group</h1>
+			</div>
+			{isLoading && `Saving... please wait..`}
+			<form className="form-box" onSubmit={saveTeams}>
+				<div className="field">
+					<input
+						name="groupName"
+						placeholder="Group Name"
+						value={formInputs.groupName}
+						onChange={changeFormInputs}
+					/>
+				</div>
+				<span className="error">{formErrors.groupName}</span>
+				<button type="submit" disabled={formErrors.groupName}>
+					Save
+				</button>
+			</form>
 		</div>
 	);
 }
