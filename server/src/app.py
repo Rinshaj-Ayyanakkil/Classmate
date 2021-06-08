@@ -130,7 +130,7 @@ class Groups(Resource):
     @marshal_with(group_fields, envelope="groups")
     def get(self):
         groups = GroupModel.query.all()
-        return groups
+        return groups, 200
 
     def put(self):
         args = groups_parser.parse_args()
@@ -147,10 +147,10 @@ class Groups(Resource):
         try:
             db.session.add(new_group)
             db.session.commit()
-            return str(new_group)
+            return str(new_group), 200
         except Exception as e:
             print(e)
-            abort(500, message="db failed")
+            abort(500, message="database error")
 
 
 api.add_resource(Students, "/students")
