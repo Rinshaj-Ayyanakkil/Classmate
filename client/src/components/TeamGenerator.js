@@ -3,7 +3,7 @@ import "../css/UI-Components.css";
 import React, { useState, useContext } from "react";
 import { shuffleArray } from "../Globals";
 import { useTeams } from "../routes/TeamManagerPage";
-import CollapsableFieldset from "./CollapsibleFieldset";
+import CandidateItems from "./CandidateItems";
 import useForm from "../hooks/useForm";
 
 const ItemsContext = React.createContext();
@@ -80,7 +80,7 @@ export default function TeamGenerator({ itemList }) {
 				<button type="submit">generate</button>
 			</form>
 			<ItemsContext.Provider value={[items, setItems]}>
-				<CollapsableFieldset itemList={items} />
+				<CandidateItems itemList={items} />
 			</ItemsContext.Provider>
 		</div>
 	);
