@@ -19,8 +19,10 @@ export const getRandomNumber = (min, max) => {
 };
 
 export const shuffleArray = (array) => {
-	for (let i = array.length - 1; i > 0; i--) {
+	const arrayCopy = [...array];
+	for (let i = arrayCopy.length - 1; i > 0; i--) {
 		let j = getRandomNumber(0, i); // random index from 0 to i
-		[array[i], array[j]] = [array[j], array[i]];
+		[arrayCopy[i], arrayCopy[j]] = [arrayCopy[j], arrayCopy[i]];
 	}
+	return arrayCopy;
 };
