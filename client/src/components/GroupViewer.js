@@ -1,10 +1,9 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
 import TeamViewer from "./TeamViewer";
 
 export default function GroupViewer({ teams }) {
 	const [groups, setGroups] = useState([]);
-	console.log(`fetched`);
 
 	useEffect(() => {
 		const fetchSavedGroups = async () => {
@@ -24,7 +23,7 @@ export default function GroupViewer({ teams }) {
 			}
 		};
 		fetchSavedGroups();
-	}, [groups]);
+	}, []);
 
 	return (
 		<div className="group-view-container">
