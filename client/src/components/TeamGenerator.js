@@ -5,6 +5,7 @@ import { generateKey, shuffleArray } from "../Globals";
 import { useTeams, ACTIONS } from "../routes/TeamManagerPage";
 import CandidateItems from "./CandidateItems";
 import useForm from "../hooks/useForm";
+import TeamCard from "./TeamCard";
 
 const ItemsContext = React.createContext();
 
@@ -42,7 +43,7 @@ export default function TeamGenerator({ itemList }) {
 			newTeams.push(teamModel(currentTeamCount + i));
 		}
 
-		dispatch({ type: ACTIONS.UPDATE_TEAMS, payload: { newTeams: newTeams } });
+		dispatch({ type: ACTIONS.UPDATE_TEAMS, payload: { teams: newTeams } });
 
 		return newTeams;
 	};
@@ -167,27 +168,13 @@ export default function TeamGenerator({ itemList }) {
 
 			<div className="team-cards-container">
 				{teams.map((team) => (
-					<div
+					<TeamCard
+						onDragEnd={handleDragEnd}
+						onDragStart={handleDragStart}
+						onDragEnter={handleDragEnter}
+						team={team}
 						key={generateKey(team.id)}
-						className="team-card"
-						onDragEnter={(e) => handleDragEnter(e, team.id)}
-					>
-						<div className="title">
-							<h3>{team.title}</h3>
-							<p>{team.members.length}</p>
-						</div>
-						{team.members.map((member) => (
-							<div
-								key={generateKey(member)}
-								className="member"
-								draggable
-								onDragStart={(e) => handleDragStart(e, member.id)}
-								onDragEnd={(e) => handleDragEnd(e, member.id)}
-							>
-								{member.content}
-							</div>
-						))}
-					</div>
+					/>
 				))}
 
 				<div className="add-team-card" onClick={() => createTeams()}>
