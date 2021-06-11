@@ -28,6 +28,7 @@ export default function TeamGenerator({ itemList }) {
 	// function to add empty teams
 	const createTeams = (count = 1) => {
 		const currentTeamCount = teams.length;
+		console.log(currentTeamCount);
 		const teamModel = (id = 1, members = []) => {
 			return {
 				id: generateKey(id),
@@ -41,7 +42,7 @@ export default function TeamGenerator({ itemList }) {
 			newTeams.push(teamModel(currentTeamCount + i));
 		}
 
-		dispatch({ type: ACTIONS.UPDATE_TEAMS, payload: { teams: newTeams } });
+		dispatch({ type: ACTIONS.UPDATE_TEAMS, payload: { newTeams: newTeams } });
 
 		return newTeams;
 	};
@@ -97,6 +98,8 @@ export default function TeamGenerator({ itemList }) {
 	const generateTeams = (event) => {
 		event.preventDefault();
 
+		console.log(`after clear: ${teams.length}`);
+
 		const assignedItems = assignTeams(formInputs.teamCount, items);
 		setItems(assignedItems);
 	};
@@ -147,10 +150,8 @@ export default function TeamGenerator({ itemList }) {
 					/>
 				</div>
 				<button type="submit">generate</button>
-				<button type="button" onClick={clearAllTeams}>
-					Clear all Teams
-				</button>
 			</form>
+			<button onClick={clearAllTeams}>Reset All Teams</button>
 
 			<ItemsContext.Provider value={[items, setItems]}>
 				<CandidateItems
