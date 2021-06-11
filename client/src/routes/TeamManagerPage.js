@@ -3,9 +3,7 @@ import GroupViewer from "../components/GroupViewer";
 import TeamGenerator from "../components/TeamGenerator";
 import TeamSaveMenu from "../components/TeamSaveMenu";
 import TeamViewer from "../components/TeamViewer";
-import TeamCreator from "../components/TeamCreator";
 import { useStudents } from "../contexts/StudentsContext";
-import SliderSwitch from "../components/SliderSwitch";
 
 const TeamsContext = React.createContext();
 
@@ -14,7 +12,6 @@ export const useTeams = () => {
 };
 
 export default function TeamManagerPage() {
-	const [isAutoGeneration, setAutoGeneration] = useState(false);
 	const [teams, setTeams] = useState([]);
 
 	const studentsData = useStudents();
@@ -25,36 +22,19 @@ export default function TeamManagerPage() {
 				return {
 					id: student.rollNo,
 					content: student.name,
+					isParticipating: true,
+					assignedTeam: undefined,
 				};
 			})
 		);
 	}, [studentsData]);
 
-	const toggleAutoGeneration = () => {
-		setAutoGeneration(!isAutoGeneration);
-	};
-
 	return (
 		<div className="page-container">
 			<h1>Team Manager</h1>
 
-			<SliderSwitch
-				isChecked={isAutoGeneration}
-				onChange={toggleAutoGeneration}
-				dataOn="Auto"
-				dataOff="Manual"
-			/>
-
 			<TeamsContext.Provider value={[teams, setTeams]}>
-				{items.length !== 0 && (
-					<div>
-						{isAutoGeneration ? (
-							<TeamGenerator itemList={items} />
-						) : (
-							<TeamCreator itemList={items} />
-						)}
-					</div>
-				)}
+				{items.length !== 0 && <TeamGenerator itemList={items} />}
 				<TeamViewer teams={teams} />
 				<TeamSaveMenu />
 				<GroupViewer />
