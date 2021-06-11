@@ -1,8 +1,8 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { generateKey, shuffleArray } from "../Globals";
-import { useTeams } from "../routes/TeamManagerPage";
+import { useTeams, ACTIONS } from "../routes/TeamManagerPage";
 import CandidateItems from "./CandidateItems";
 import useForm from "../hooks/useForm";
 
@@ -23,7 +23,7 @@ export default function TeamGenerator({ itemList }) {
 	};
 	const [formInputs, changeFormInputs] = useForm(formFields);
 
-	const [teams, setTeams] = useTeams();
+	const [teams, dispatch] = useTeams();
 
 	// function to add empty teams
 	const createTeams = (count = 1) => {
@@ -41,7 +41,9 @@ export default function TeamGenerator({ itemList }) {
 		for (let i = 1; i <= count; i++) {
 			newTeams.push(teamModel(currentTeamCount + i));
 		}
-		setTeams((teams) => [...teams, ...newTeams]);
+
+		dispatch({ type: ACTIONS.UPDATE_TEAMS, payload: { newTeams: newTeams } });
+
 		return newTeams;
 	};
 
@@ -49,14 +51,13 @@ export default function TeamGenerator({ itemList }) {
 	const assignTeams = (teamCount, items) => {
 		if (teamCount === 0) return [];
 
-		//clearing the current teams
-		setTeams((teams) => []);
-
 		const newTeams = createTeams(teamCount);
 
 		// evenly assigning each item a team id
 
-		let candidates = [...items.filter((item) => item.isParticipating)];
+		let candidates = [
+			...items.filter((item) => item.isParticipating && !item.assignedTeam),
+		];
 		candidates = shuffleArray(candidates);
 
 		candidates.map((item, i) => {
@@ -76,20 +77,20 @@ export default function TeamGenerator({ itemList }) {
 	};
 
 	// updating teams whenever the items change
+	const stableDispatch = useCallback(dispatch, [dispatch]);
 	useEffect(() => {
-		setTeams((teams) =>
-			teams.map((team) => {
-				return {
-					...team,
-					members: items.filter((item) => item.assignedTeam === team.id),
-				};
-			})
-		);
-	}, [items]);
+		stableDispatch({
+			type: ACTIONS.SET_MEMBERS_BY_ITEMS,
+			payload: { items: items },
+		});
+	}, [items, stableDispatch]);
 
 	// team generation function to be called on submitting the team count
 	const generateTeams = (event) => {
 		event.preventDefault();
+
+		console.log(`after clear: ${teams.length}`);
+
 		const assignedItems = assignTeams(formInputs.teamCount, items);
 		setItems(assignedItems);
 	};
