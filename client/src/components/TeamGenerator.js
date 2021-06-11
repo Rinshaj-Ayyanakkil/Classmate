@@ -1,7 +1,7 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import React, { useState, useContext } from "react";
-import { shuffleArray } from "../Globals";
+import React, { useState, useContext, useEffect } from "react";
+import { generateKey, shuffleArray } from "../Globals";
 import { useTeams } from "../routes/TeamManagerPage";
 import CandidateItems from "./CandidateItems";
 import useForm from "../hooks/useForm";
@@ -13,6 +13,8 @@ export const useItems = () => {
 };
 
 export default function TeamGenerator({ itemList }) {
+	const [items, setItems] = useState(itemList);
+
 	const formFields = {
 		teamCount: {
 			value: 1,
@@ -21,52 +23,111 @@ export default function TeamGenerator({ itemList }) {
 	};
 	const [formInputs, changeFormInputs] = useForm(formFields);
 
-	const [items, setItems] = useState(() =>
-		itemList.map((item) => {
-			return { ...item, isParticipating: true, assignedTeam: null };
-		})
-	);
-	const [, setTeams] = useTeams();
+	const [teams, setTeams] = useTeams();
 
-	const teamModel = (id = 1, members = []) => {
-		return {
-			id: id,
-			title: `Team ${id}`,
-			members: members,
+	// function to add empty teams
+	const createTeams = (count = 1) => {
+		const currentTeamCount = teams.length;
+		const teamModel = (id = 1, members = []) => {
+			return {
+				id: id,
+				title: `Team ${id}`,
+				members: members,
+			};
 		};
-	};
 
-	// team generator function
-	const generateTeams = (teamCount, items) => {
-		const memberCount = Math.ceil(items.length / teamCount);
-		if (teamCount === 0) return;
-
-		items = shuffleArray(items);
-
-		const teams = [];
-		for (let i = 0, n = 0; i < teamCount; i++, n += memberCount) {
-			const members = items.slice(n, n + memberCount);
-			console.log(i, n, members);
-			const newTeam = teamModel(i + 1, members);
-			teams.push(newTeam);
+		const newTeams = [];
+		for (let i = 1; i <= count; i++) {
+			newTeams.push(teamModel(currentTeamCount + i));
 		}
-
-		return teams;
+		setTeams((teams) => [...teams, ...newTeams]);
+		return newTeams;
 	};
 
-	const handleTeamGeneration = (event) => {
-		event.preventDefault();
-		const teams = generateTeams(
-			formInputs.teamCount,
-			items.filter((item) => item.isParticipating)
+	// function assigning a team to each item
+	const assignTeams = (teamCount, items) => {
+		if (teamCount === 0) return [];
+
+		//clearing the current teams
+		setTeams([]);
+
+		const newTeams = createTeams(teamCount);
+
+		// evenly assigning each item a team id
+
+		let candidates = [...items.filter((item) => item.isParticipating)];
+		candidates = shuffleArray(candidates);
+
+		candidates.map((item, i) => {
+			// value of n will starts from 0 to teamCount and resets to 0 upon reaching teamCount again
+			// eg: if teamCount = 5, n = 0, 1, 2, 3, 4, 0, 1 ....
+			let n = i < teamCount ? i : i - teamCount * Math.floor(i / teamCount);
+			const randomItem = { ...item, assignedTeam: newTeams[n]?.id };
+
+			items = items.map((item) =>
+				item.id === randomItem.id
+					? { ...item, assignedTeam: randomItem.assignedTeam }
+					: item
+			);
+			return candidates;
+		});
+		return items;
+	};
+
+	// updating teams whenever the items change
+	useEffect(() => {
+		setTeams((teams) =>
+			teams.map((team) => {
+				return {
+					...team,
+					members: items.filter((item) => item.assignedTeam === team.id),
+				};
+			})
 		);
-		setTeams(teams);
+	}, [items]);
+
+	// team generation function to be called on submitting the team count
+	const generateTeams = (event) => {
+		event.preventDefault();
+		const assignedItems = assignTeams(formInputs.teamCount, items);
+		setItems(assignedItems);
+	};
+
+	// drag and drop handlers for manually re-arranging team members
+	let dropZone = undefined;
+	let draggedItem = undefined;
+
+	const handleDragStart = (event, id) => {
+		event.stopPropagation();
+
+		draggedItem = items.find((item) => item.id === id);
+	};
+
+	const handleDragEnter = (event, id) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		// dropZone will be either a team id or undefined
+		dropZone = teams.find((team) => team.id === id);
+	};
+
+	const handleDragEnd = (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		// Updates the assigned team of the dragged with dropZone
+		setItems(
+			items.map((item) =>
+				item === draggedItem ? { ...item, assignedTeam: dropZone?.id } : item
+			)
+		);
 	};
 
 	return (
-		<div className="team-generator-container">
-			<form className="toggle-input" onSubmit={handleTeamGeneration}>
-				<label>
+		<div className="team-generator-container" onDragEnter={handleDragEnter}>
+			<form className="user-input-form" onSubmit={generateTeams}>
+				<div className="field">
+					<label>Team Count </label>
 					<input
 						type="number"
 						name="teamCount"
@@ -76,12 +137,47 @@ export default function TeamGenerator({ itemList }) {
 						max={items.filter((item) => item.isParticipating).length}
 						required
 					/>
-				</label>
+				</div>
 				<button type="submit">generate</button>
 			</form>
+
 			<ItemsContext.Provider value={[items, setItems]}>
-				<CandidateItems itemList={items} />
+				<CandidateItems
+					itemList={items}
+					onDragStart={handleDragStart}
+					onDragEnd={handleDragEnd}
+				/>
 			</ItemsContext.Provider>
+
+			<div className="team-cards-container">
+				{teams.map((team) => (
+					<div
+						key={generateKey(team.id)}
+						className="team-card"
+						onDragEnter={(e) => handleDragEnter(e, team.id)}
+					>
+						<div className="title">
+							<h3>{team.title}</h3>
+							<p>{team.members.length}</p>
+						</div>
+						{team.members.map((member) => (
+							<div
+								key={generateKey(member)}
+								className="member"
+								draggable
+								onDragStart={(e) => handleDragStart(e, member.id)}
+								onDragEnd={(e) => handleDragEnd(e, member.id)}
+							>
+								{member.content}
+							</div>
+						))}
+					</div>
+				))}
+
+				<div className="add-team-card" onClick={() => createTeams()}>
+					+
+				</div>
+			</div>
 		</div>
 	);
 }
