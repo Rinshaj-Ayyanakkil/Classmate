@@ -3,10 +3,9 @@ import { generateKey } from "../Globals";
 import { useItems } from "./TeamGenerator";
 import SliderSwitch from "./SliderSwitch";
 
-export default function CollapsableFieldset({ itemList }) {
+export default function CandidateItems({ onDragEnd, onDragStart }) {
 	const [items, setItems] = useItems();
 
-	const [isFieldsetCollapsed, setFieldsetCollapsed] = useState(false);
 	const [isAllParticipating, setAllParticipating] = useState(true);
 
 	useEffect(() => {
@@ -34,26 +33,26 @@ export default function CollapsableFieldset({ itemList }) {
 	};
 
 	return (
-		<fieldset
-			className={`collapsible-fieldset ${isFieldsetCollapsed && `collapsed`}`}
-		>
-			<legend onClick={() => setFieldsetCollapsed(!isFieldsetCollapsed)}>
-				{isFieldsetCollapsed ? `SHOW` : `HIDE`}
-			</legend>
-
+		<div className="candidate-list">
 			<SliderSwitch isChecked={isAllParticipating} onChange={toggleAllChecked} />
 
 			<div className="items-list">
-				{items.map((item) => (
-					<div
-						className={`item-content ${!item.isParticipating && `checked`}`}
-						onClick={() => toggleItemCheck(item.id)}
-						key={generateKey(item.id)}
-					>
-						{item.content}
-					</div>
-				))}
+				{items.map(
+					(item) =>
+						!item.assignedTeam && (
+							<div
+								className={`item-content ${!item.isParticipating && `checked`}`}
+								onClick={() => toggleItemCheck(item.id)}
+								key={generateKey(item.id)}
+								draggable={true}
+								onDragStart={(e) => onDragStart(e, item.id)}
+								onDragEnd={onDragEnd}
+							>
+								{item.content}
+							</div>
+						)
+				)}
 			</div>
-		</fieldset>
+		</div>
 	);
 }
