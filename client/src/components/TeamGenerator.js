@@ -28,9 +28,10 @@ export default function TeamGenerator({ itemList }) {
 	// function to add empty teams
 	const createTeams = (count = 1) => {
 		const currentTeamCount = teams.length;
+		console.log(currentTeamCount);
 		const teamModel = (id = 1, members = []) => {
 			return {
-				id: id,
+				id: generateKey(id),
 				title: `Team ${id}`,
 				members: members,
 			};
@@ -49,7 +50,7 @@ export default function TeamGenerator({ itemList }) {
 		if (teamCount === 0) return [];
 
 		//clearing the current teams
-		setTeams([]);
+		setTeams((teams) => []);
 
 		const newTeams = createTeams(teamCount);
 
