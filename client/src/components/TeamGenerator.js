@@ -5,12 +5,17 @@ import { generateKey, shuffleArray } from "../Globals";
 import { useTeams, ACTIONS } from "../routes/TeamManagerPage";
 import CandidateItems from "./CandidateItems";
 import useForm from "../hooks/useForm";
-import TeamCard from "./TeamCard";
+import TeamCardsViewer from "./TeamCardsViewer";
 
 const ItemsContext = React.createContext();
+const DragDropContext = React.createContext();
 
 export const useItems = () => {
 	return useContext(ItemsContext);
+};
+
+export const useDragDrop = () => {
+	return useContext(DragDropContext);
 };
 
 export default function TeamGenerator({ itemList }) {
@@ -29,7 +34,6 @@ export default function TeamGenerator({ itemList }) {
 	// function to add empty teams
 	const createTeams = (count = 1) => {
 		const currentTeamCount = teams.length;
-		console.log(currentTeamCount);
 		const teamModel = (id = 1, members = []) => {
 			return {
 				id: generateKey(id),
@@ -158,29 +162,19 @@ export default function TeamGenerator({ itemList }) {
 				</button>
 			</form>
 
-			<ItemsContext.Provider value={[items, setItems]}>
-				<CandidateItems
-					itemList={items}
-					onDragStart={handleDragStart}
-					onDragEnd={handleDragEnd}
-				/>
-			</ItemsContext.Provider>
-
-			<div className="team-cards-container">
-				{teams.map((team) => (
-					<TeamCard
-						onDragEnd={handleDragEnd}
+			<DragDropContext.Provider
+				value={[handleDragStart, handleDragEnd, handleDragEnter]}
+			>
+				<ItemsContext.Provider value={[items, setItems]}>
+					<CandidateItems
+						itemList={items}
 						onDragStart={handleDragStart}
-						onDragEnter={handleDragEnter}
-						team={team}
-						key={generateKey(team.id)}
+						onDragEnd={handleDragEnd}
 					/>
-				))}
+				</ItemsContext.Provider>
 
-				<div className="add-team-card" onClick={() => createTeams()}>
-					+
-				</div>
-			</div>
+				<TeamCardsViewer addTeamCard={() => createTeams(1)} />
+			</DragDropContext.Provider>
 		</div>
 	);
 }

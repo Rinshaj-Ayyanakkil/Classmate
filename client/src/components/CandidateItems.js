@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
-import { useItems } from "./TeamGenerator";
+import { useDragDrop, useItems } from "./TeamGenerator";
 import SliderSwitch from "./SliderSwitch";
 
-export default function CandidateItems({ onDragEnd, onDragStart }) {
+export default function CandidateItems() {
 	const [items, setItems] = useItems();
+	const [handleDragStart, handleDragEnd] = useDragDrop();
 
 	const [isAllParticipating, setAllParticipating] = useState(true);
 
@@ -45,8 +46,8 @@ export default function CandidateItems({ onDragEnd, onDragStart }) {
 								onClick={() => toggleItemCheck(item.id)}
 								key={generateKey(item.id)}
 								draggable={true}
-								onDragStart={(e) => onDragStart(e, item.id)}
-								onDragEnd={onDragEnd}
+								onDragStart={(e) => handleDragStart(e, item.id)}
+								onDragEnd={handleDragEnd}
 							>
 								{item.content}
 							</div>
