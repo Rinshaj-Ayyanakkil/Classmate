@@ -84,7 +84,7 @@ export default function TeamGenerator({ itemList }) {
 	const clearAllTeams = () => {
 		setItems(
 			items.map((item) => {
-				return { ...item, assignTeams: undefined };
+				return { ...item, assignedTeam: undefined };
 			})
 		);
 		dispatch({ type: ACTIONS.SET_TEAMS, payload: { teams: [] } });
@@ -103,8 +103,6 @@ export default function TeamGenerator({ itemList }) {
 	// team generation function to be called on submitting the team count
 	const generateTeams = (event) => {
 		event.preventDefault();
-
-		console.log(`after clear: ${teams.length}`);
 
 		const assignedItems = assignTeams(formInputs.teamCount, items);
 		setItems(assignedItems);
