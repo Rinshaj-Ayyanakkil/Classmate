@@ -86,6 +86,7 @@ export default function TeamGenerator({ itemList }) {
 	};
 
 	// updating teams whenever the items change
+	// using stable dispatch for using hooks inside useEffect
 	const stableDispatch = useCallback(dispatch, [dispatch]);
 	useEffect(() => {
 		stableDispatch({
@@ -150,8 +151,11 @@ export default function TeamGenerator({ itemList }) {
 					/>
 				</div>
 				<button type="submit">generate</button>
+
+				<button type="button" onClick={clearAllTeams}>
+					Reset All Teams
+				</button>
 			</form>
-			<button onClick={clearAllTeams}>Reset All Teams</button>
 
 			<ItemsContext.Provider value={[items, setItems]}>
 				<CandidateItems

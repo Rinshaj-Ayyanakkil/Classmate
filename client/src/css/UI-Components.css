@@ -445,6 +445,7 @@ select:focus {
 	padding: 5px;
 	text-align: center;
 	margin: 0.5rem;
+	text-transform: uppercase;
 }
 
 .candidate-list {
