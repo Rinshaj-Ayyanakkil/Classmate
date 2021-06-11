@@ -355,6 +355,12 @@ select:focus {
 	height: 30px;
 }
 
+.switch-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .switch input {
 	opacity: 0;
 	width: 0;
@@ -405,63 +411,43 @@ select:focus {
 
 .team-generator-container {
 	position: relative;
-	border: 1px solid var(--text-primary);
-}
-
-.team-generator-container .toggle-input {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	border: 1px solid var(--text-primary);
+	flex-wrap: wrap;
 }
 
-.switch-wrapper {
+.team-generator-container .user-input-form {
+	width: 20%;
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-self: center;
+	margin: 1rem;
 }
 
-.team-generator-container .toggle-input .switch {
-	margin: 10px;
-	width: 100px;
+.team-cards-container .user-input-form .field {
+	display: flex;
+	justify-content: space-between;
 }
 
-.team-generator-container .toggle-input .switch .slider {
-	width: 100px;
-	background-color: var(--danger-red);
-}
-
-.team-generator-container .toggle-input .switch .slider::before {
-	width: 50px;
-	height: 30px;
-	left: 0;
-	bottom: 0;
-	border-radius: 20px 0 0 20px;
-	background-color: darkgreen;
-}
-
-.team-generator-container
-	.toggle-input
-	.switch
-	input:checked
-	+ .slider::before {
-	border-radius: 0 20px 20px 0 !important;
-}
-
-.team-generator-container .toggle-input .switch input:checked + .slider:before {
-	-webkit-transform: translateX(100%);
-	-ms-transform: translateX(100%);
-	transform: translateX(100%);
-}
-.team-generator-container .toggle-input input[type="Number"] {
+.team-generator-container .user-input-form .field input {
 	border: 0;
 	outline: 0;
 	font-family: inherit;
 	padding: 5px;
-	font-size: large;
-	text-align: center;
 }
 
-.collapsible-fieldset {
+.team-generator-container .user-input-form button {
+	border: 0;
+	outline: 0;
+	font-family: inherit;
+	padding: 5px;
+	text-align: center;
+	margin: 0.5rem;
+}
+
+.candidate-list {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -469,36 +455,29 @@ select:focus {
 	align-items: center;
 }
 
-.collapsible-fieldset.collapsed *:not(legend) {
-	display: none;
-}
-
-.collapsible-fieldset legend {
-	padding: 10px 20px;
-	border: 1px solid var(--text-primary);
-	cursor: pointer;
-}
-
-.collapsible-fieldset .switch {
+.candidate-list .switch {
 	margin: 10px;
 }
 
-.collapsible-fieldset .items-list {
-	width: 100%;
-	display: grid;
-	grid-template-columns: repeat(auto-fill, 10rem);
-	justify-content: space-evenly;
-	grid-row-gap: 10px;
+.candidate-list .items-list {
+	display: flex;
+	flex-wrap: wrap;
 }
 
-.collapsible-fieldset .items-list .item-content {
+.candidate-list .items-list .item-content {
 	display: block;
 	cursor: pointer;
 	padding: 0.5rem;
 	background-color: var(--color-primary-dark);
+	margin: 0.5rem;
 }
 
-.collapsible-fieldset .items-list .item-content.checked {
+.candidate-list .items-list .item-content.unassigned {
+	color: yellow;
+	cursor: move;
+}
+
+.candidate-list .items-list .item-content.checked {
 	text-decoration: line-through;
 	font-style: italic;
 	color: gray;
