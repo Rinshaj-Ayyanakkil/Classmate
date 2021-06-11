@@ -14,6 +14,7 @@ export const ACTIONS = {
 	UPDATE_TEAMS: "updateTeams",
 	SET_TEAMS: "resetTeams",
 	SET_MEMBERS_BY_ITEMS: "setMembersByItem",
+	CHANGE_TEAM_TITLE: "changeTeamTitle",
 };
 
 export default function TeamManagerPage() {
@@ -33,6 +34,15 @@ export default function TeamManagerPage() {
 								(item) => item.assignedTeam === team.id
 							),
 						};
+					}),
+				};
+			case ACTIONS.CHANGE_TEAM_TITLE:
+				return {
+					...state,
+					teams: state.teams.map((team) => {
+						return team.id === action.payload.id
+							? { ...team, title: action.payload.title }
+							: team;
 					}),
 				};
 			default:

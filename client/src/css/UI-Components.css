@@ -557,6 +557,14 @@ select:focus {
 	text-decoration: underline;
 }
 
+.team-card .title h3.editable {
+	background-color: rgba(255, 255, 255, 0.5);
+	outline: 0;
+	color: black;
+	padding: 0.5rem;
+	text-decoration: none;
+}
+
 .team-card .member {
 	background-color: var(--text-primary);
 	color: var(--color-primary-dark);
