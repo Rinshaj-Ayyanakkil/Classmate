@@ -3,10 +3,8 @@ import "../css/UI-Components.css";
 import React, { useEffect, useRef, useState } from "react";
 import { generateKey } from "../Globals";
 import { useDragDrop } from "./TeamGenerator";
-import { useTeams } from "../routes/TeamManagerPage";
-import { ACTIONS } from "../routes/TeamManagerPage";
 
-export default function TeamCard({ team }) {
+export default function TeamCard({ team, onChangeTitle }) {
 	const [handleDragStart, handleDragEnd, handleDragEnter] = useDragDrop();
 
 	const [isEditable, setEditable] = useState(false);
@@ -15,15 +13,11 @@ export default function TeamCard({ team }) {
 	useEffect(() => {
 		titleRef.current.focus();
 	}, [isEditable]);
-	const [, dispatch] = useTeams();
 
-	const saveNewTitle = (id, newTitle) => {
-		console.log(`new title: ${newTitle}`);
-		dispatch({
-			type: ACTIONS.CHANGE_TEAM_TITLE,
-			payload: { id: team.id, title: newTitle },
-		});
-		setEditable(false);
+	const handleChangeTitle = (id, newTitle) => {
+		const isTitleChanged = onChangeTitle(team.id, newTitle);
+		// if title is changed successfully, editable is set false and vice versa
+		setEditable(!isTitleChanged);
 	};
 
 	return (
@@ -41,7 +35,9 @@ export default function TeamCard({ team }) {
 				{!isEditable ? (
 					<button onClick={() => setEditable(true)}>edit</button>
 				) : (
-					<button onClick={() => saveNewTitle(team.id, titleRef.current?.innerText)}>
+					<button
+						onClick={() => handleChangeTitle(team.id, titleRef.current?.innerText)}
+					>
 						save
 					</button>
 				)}
