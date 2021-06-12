@@ -551,10 +551,13 @@ select:focus {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .team-card .title h3 {
 	text-decoration: underline;
+	overflow: hidden;
 }
 
 .team-card .title h3.editable {
