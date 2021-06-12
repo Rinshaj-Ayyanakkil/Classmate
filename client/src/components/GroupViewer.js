@@ -1,39 +1,40 @@
-import React, { useState, useEffect } from "react";
-import { generateKey } from "../Globals";
+import React, { useState, useEffect, useRef } from "react";
 import TeamViewer from "./TeamViewer";
 
-export default function GroupViewer({ teams }) {
-	const [groups, setGroups] = useState([]);
+export default function GroupViewer({ group, onChangeTitle }) {
+	const [isEditable, setEditable] = useState(false);
+
+	const titleRef = useRef(null);
 
 	useEffect(() => {
-		const fetchSavedGroups = async () => {
-			try {
-				const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/groups`, {
-					method: "GET",
-					headers: {
-						"Content-type": "application/json; charset=UTF-8",
-					},
-				});
-				if (response.ok) {
-					const data = await response.json();
-					setGroups(data?.groups);
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		fetchSavedGroups();
-	}, []);
+		titleRef.current.focus();
+	}, [isEditable]);
+
+	const handleChangeTitle = (id, newTitle) => {
+		const isTitleChanged = onChangeTitle(group.id, newTitle);
+		// if title is changed successfully, editable is set false and vice versa
+		setEditable(!isTitleChanged);
+	};
 
 	return (
-		<div className="group-view-container">
-			<h1>Saved Groups</h1>
-			{groups.map((group) => (
-				<div className="group-view" key={generateKey(group.id)}>
-					<h1>{group.title}</h1>
-					<TeamViewer teams={group.teams} />
-				</div>
-			))}
+		<div className="group-view">
+			<div className="header">
+				<h1 ref={titleRef} contentEditable={isEditable}>
+					{group.title}
+				</h1>
+				{!isEditable ? (
+					<button onClick={() => setEditable(true)}>edit</button>
+				) : (
+					<button
+						onClick={() => handleChangeTitle(group.id, titleRef.current.innerText)}
+					>
+						save
+					</button>
+				)}
+			</div>
+			<div className="content">
+				<TeamViewer teams={group.teams} />
+			</div>
 		</div>
 	);
 }

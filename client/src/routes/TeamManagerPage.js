@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useReducer } from "react";
-import GroupViewer from "../components/GroupViewer";
+import SavedGroups from "../components/SavedGroups";
 import TeamGenerator from "../components/TeamGenerator";
 import TeamSaveMenu from "../components/TeamSaveMenu";
 import { useStudents } from "../contexts/StudentsContext";
@@ -74,7 +74,7 @@ export default function TeamManagerPage() {
 			<TeamsContext.Provider value={[state.teams, dispatch]}>
 				{items.length !== 0 && <TeamGenerator itemList={items} />}
 				<TeamSaveMenu />
-				<GroupViewer />
+				<SavedGroups />
 			</TeamsContext.Provider>
 		</div>
 	);
