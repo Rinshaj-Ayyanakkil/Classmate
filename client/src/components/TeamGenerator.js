@@ -37,7 +37,7 @@ export default function TeamGenerator({ itemList }) {
 		const teamModel = (id = 1, members = []) => {
 			return {
 				id: generateKey(id),
-				title: `Team ${id}`,
+				title: `TEAM ${id}`,
 				members: members,
 			};
 		};
