@@ -58,8 +58,6 @@ export default function SavedGroups() {
 		return true;
 	};
 
-	console.log(groups);
-
 	return (
 		<div className="groups-container">
 			{groups.map((group) => (
