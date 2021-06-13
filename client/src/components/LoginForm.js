@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 export default function LoginBox(props) {
 	const formFields = {
 		username: {
-			value: ``,
+			name: `username`,
+			initialValue: ``,
 			validations: [
 				{ pattern: /^.{1,}$/, message: `username cant be empty` },
 				{
@@ -17,7 +18,8 @@ export default function LoginBox(props) {
 			],
 		},
 		password: {
-			value: ``,
+			name: `password`,
+			initialValue: ``,
 			validations: [
 				{
 					pattern: /^.{8,}$/,
@@ -43,7 +45,7 @@ export default function LoginBox(props) {
 				<div className={`field`}>
 					<label>username</label>
 					<input
-						name="username"
+						name={formFields.username.name}
 						type="text"
 						value={formInputs.username}
 						onChange={changeFormInputs}
@@ -55,7 +57,7 @@ export default function LoginBox(props) {
 				<div className={`field`}>
 					<label>password</label>
 					<input
-						name="password"
+						name={formFields.password.name}
 						type="password"
 						value={formInputs.password}
 						onChange={changeFormInputs}

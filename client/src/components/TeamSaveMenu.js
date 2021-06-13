@@ -8,7 +8,8 @@ export default function TeamSaveMenu() {
 
 	const formFields = {
 		groupName: {
-			value: ``,
+			name: "groupName",
+			initialValue: ``,
 			validations: [
 				{ pattern: /^.{1,}$/, message: `group name cant be empty` },
 				{
@@ -63,7 +64,7 @@ export default function TeamSaveMenu() {
 			<form className="form-box" onSubmit={saveTeams}>
 				<div className="field">
 					<input
-						name="groupName"
+						name={formFields.groupName.name}
 						placeholder="Group Name"
 						value={formInputs.groupName}
 						onChange={changeFormInputs}

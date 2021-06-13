@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 export default function RegisterForm({ handleSubmit, registerError }) {
 	const formFields = {
 		id: {
+			name: "id",
 			value: `1`,
 		},
 		username: {
-			value: ``,
+			name: "username",
+			initialValue: ``,
 			validations: [
 				{ pattern: /^.{1,}$/, message: `username cant be empty` },
 				{
@@ -21,7 +23,8 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 			],
 		},
 		password: {
-			value: ``,
+			name: "password",
+			initialValue: ``,
 			validations: [
 				{
 					pattern: /^.{8,}$/,
@@ -30,7 +33,8 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 			],
 		},
 		confirmPassword: {
-			value: ``,
+			name: "confirmPassword",
+			initialValue: ``,
 			// validations: [
 			// 	{ pattern: `pattern`, message: `error msg` },
 			// 	{ pattern: `pattern`, message: `error msg` },
@@ -61,7 +65,7 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 				<div className="field">
 					<label>Select your register number</label>
 					<select
-						name="id"
+						name={formFields.id.name}
 						value={formInputs.id}
 						onChange={changeFormInputs}
 						required
@@ -74,7 +78,7 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 				<div className="field">
 					<label>username</label>
 					<input
-						name="username"
+						name={formFields.username.name}
 						type="text"
 						value={formInputs.username}
 						onChange={changeFormInputs}
@@ -86,7 +90,7 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 				<div className="field">
 					<label>password</label>
 					<input
-						name="password"
+						name={formFields.password.name}
 						type="password"
 						value={formInputs.password}
 						onChange={changeFormInputs}
@@ -97,7 +101,7 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 				<div className="field">
 					<label>Confirm Password</label>
 					<input
-						name="confirmPassword"
+						name={formFields.confirmPassword.name}
 						type="password"
 						value={formInputs.confirmPassword}
 						onChange={changeFormInputs}
