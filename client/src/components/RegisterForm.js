@@ -45,10 +45,16 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 
 	const [formInputs, changeFormInputs, formErrors] = useForm(formFields);
 
-	const [response] = useFetch(`${process.env.REACT_APP_SERVER_URL}/ids`);
+	const [response] = useFetch(`${process.env.REACT_APP_SERVER_URL}/students`);
 	const [ids, setIds] = useState([]);
 
-	useEffect(() => (response ? setIds(response.ids) : setIds([])), [response]);
+	useEffect(
+		() =>
+			response?.students
+				? setIds(response.students.map((student) => student.rollNo))
+				: setIds([]),
+		[response]
+	);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
