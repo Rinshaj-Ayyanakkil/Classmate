@@ -52,14 +52,14 @@ export default function useForm(fields) {
 			validations.every(({ pattern, message }) => {
 				const patternType = pattern.constructor.name;
 				switch (patternType) {
-					case RegExp: {
+					case "RegExp": {
 						if (!pattern.test(value)) {
 							error = message;
 							return false;
 						}
 						return true;
 					}
-					case Function: {
+					case "Function": {
 						if (!pattern(value)) {
 							error = message;
 							return false;
