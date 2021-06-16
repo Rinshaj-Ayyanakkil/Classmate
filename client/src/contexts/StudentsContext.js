@@ -15,7 +15,7 @@ export function StudentsProvider({ children }) {
 		}),
 		[]
 	);
-	const [response] = useFetch(request);
+	const [response] = useFetch(request, true);
 	const [students, setStudents] = useState([]);
 
 	useEffect(() => {
