@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { generateKey } from "../Globals";
-import useFetch from "../hooks/useFetch";
 import useForm from "../hooks/useForm";
 import { Link } from "react-router-dom";
+import { useStudents } from "../contexts/StudentsContext";
 
 export default function RegisterForm({ handleSubmit, registerError }) {
 	const formFields = {
@@ -35,26 +35,19 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 		confirmPassword: {
 			name: "confirmPassword",
 			initialValue: ``,
-			// validations: [
-			// 	{ pattern: `pattern`, message: `error msg` },
-			// 	{ pattern: `pattern`, message: `error msg` },
-			// 	{ pattern: `pattern`, message: `error msg` },
-			// ],
+			validations: [],
 		},
 	};
 
 	const [formInputs, changeFormInputs, formErrors] = useForm(formFields);
 
-	const [response] = useFetch(`${process.env.REACT_APP_SERVER_URL}/students`);
 	const [ids, setIds] = useState([]);
+	const students = useStudents();
 
-	useEffect(
-		() =>
-			response?.students
-				? setIds(response.students.map((student) => student.rollNo))
-				: setIds([]),
-		[response]
-	);
+	useEffect(() => {
+		console.log(students);
+		students ? setIds(students.map((student) => student.rollNo)) : setIds([]);
+	}, [students]);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
