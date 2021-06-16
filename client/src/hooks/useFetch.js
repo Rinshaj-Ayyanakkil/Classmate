@@ -9,7 +9,7 @@ const useFetch = ({ url, options }, fetchOnMount = false) => {
 		try {
 			const res = await fetch(url, options);
 			const data = await res.json();
-			setResponse(data);
+			setResponse({ ...data, status: res.status });
 			setLoading(false);
 		} catch (error) {
 			setResponse(null);
