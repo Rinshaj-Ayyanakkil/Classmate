@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function LoginPage({ setAuth }) {
 	const [loginError, setLoginError] = useState(null);
 
-	const handleLogin = async (username, password) => {
+	const authorizeLogin = async ({ username, password }) => {
 		try {
 			const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/login`, {
 				method: "POST",
@@ -28,20 +28,21 @@ export default function LoginPage({ setAuth }) {
 				return;
 			}
 
-			if (response.status === 409) {
+			if (response.status === 401) {
 				setLoginError("incorrect password");
 				return;
 			}
 
 			throw new Error("Unexpected Error");
 		} catch (error) {
+			console.log(`error: ${error}`);
 			setLoginError("Sorry, something went wrong");
 		}
 	};
 
 	return (
 		<div className="page-container">
-			<LoginForm onLogin={handleLogin} loginError={loginError} />
+			<LoginForm onLogin={authorizeLogin} loginError={loginError} />
 		</div>
 	);
 }

@@ -44,7 +44,7 @@
 	text-decoration: underline;
 }
 
-.toggle-menu-button {
+.toggle-button {
 	position: absolute;
 	top: 0.75rem;
 	right: 1rem;
@@ -55,7 +55,7 @@
 	height: 21px;
 }
 
-.toggle-menu-button .bar {
+.toggle-button .bar {
 	height: 3px;
 	width: 100%;
 	background-color: white;
@@ -68,7 +68,7 @@
 		align-items: flex-start;
 	}
 
-	.toggle-menu-button {
+	.toggle-button {
 		display: flex;
 	}
 
