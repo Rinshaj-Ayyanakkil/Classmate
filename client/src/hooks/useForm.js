@@ -35,9 +35,9 @@ export default function useForm(fields) {
 	);
 
 	const handleChange = (e) => {
-		const fieldName = e.target.name;
+		const fieldKey = e.target.name;
 		setValues((values) => {
-			return { ...values, [fieldName]: e.target.value };
+			return { ...values, [fieldKey]: e.target.value };
 		});
 	};
 
@@ -45,15 +45,31 @@ export default function useForm(fields) {
 	const validate = useCallback(
 		(fieldKey, validations) => {
 			if (!validations) return null;
+
+			const value = values[fieldKey];
 			let error = null;
 
 			validations.every(({ pattern, message }) => {
-				if (!pattern.test(values[fieldKey])) {
-					error = message;
-					return false;
+				const patternType = pattern.constructor.name;
+				switch (patternType) {
+					case RegExp: {
+						if (!pattern.test(value)) {
+							error = message;
+							return false;
+						}
+						return true;
+					}
+					case Function: {
+						if (!pattern(value)) {
+							error = message;
+							return false;
+						}
+						return true;
+					}
+					default: {
+						return true;
+					}
 				}
-				error = null;
-				return true;
 			});
 
 			return error;
@@ -71,7 +87,6 @@ export default function useForm(fields) {
 
 		Object.entries(validations).forEach(([fieldKey, validations]) => {
 			newErrors[fieldKey] = validate(fieldKey, validations);
-			// console.log(validations[fieldKey]);
 		});
 		setErrors(newErrors);
 	}, [validate, values, isFirstRender, validations]);
