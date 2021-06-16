@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import useFetch from "../hooks/useFetch";
 
 const StudentsContext = React.createContext();
@@ -8,7 +8,14 @@ export const useStudents = () => {
 };
 
 export function StudentsProvider({ children }) {
-	const [response] = useFetch(`${process.env.REACT_APP_SERVER_URL}/students`);
+	const request = useMemo(
+		() => ({
+			url: `${process.env.REACT_APP_SERVER_URL}/students`,
+			options: null,
+		}),
+		[]
+	);
+	const [response] = useFetch(request);
 	const [students, setStudents] = useState([]);
 
 	useEffect(() => {
