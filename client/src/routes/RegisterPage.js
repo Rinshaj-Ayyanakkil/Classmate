@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import RegisterForm from "../components/RegisterForm";
 
 export default function RegisterPage({ setAuth }) {
-	const [registerError, setRegisterError] = useState(null);
+	const [registrationError, setRegistrationError] = useState(null);
 
-	const register = async (formData) => {
+	const registerUser = async ({ studentId, username, password }) => {
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_SERVER_URL}/register`,
@@ -13,32 +13,35 @@ export default function RegisterPage({ setAuth }) {
 					headers: {
 						"Content-type": "application/json; charset=UTF-8",
 					},
-					body: JSON.stringify({ ...formData }),
+					body: JSON.stringify({ studentId, username, password }),
 				}
 			);
 
 			if (response.ok) {
-				setRegisterError(null);
+				setRegistrationError(null);
 
 				// const data = response.json()
 				setAuth(true);
 				return;
 			}
 			if (response.status === 409) {
-				setRegisterError("Student is already registered");
+				setRegistrationError("Student is already registered");
 				return;
 			}
 
 			throw new Error("Unexpected Error");
 		} catch (error) {
-			setRegisterError("Sorry, couldn't connect to Database");
+			setRegistrationError("Sorry, couldn't connect to Database");
 		}
 	};
 
 	return (
 		<div className="page-container">
 			Register Page
-			<RegisterForm handleSubmit={register} registerError={registerError} />
+			<RegisterForm
+				onRegister={registerUser}
+				registrationError={registrationError}
+			/>
 		</div>
 	);
 }
