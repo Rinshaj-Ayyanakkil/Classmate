@@ -23,7 +23,8 @@ export default function TeamGenerator({ itemList }) {
 
 	const formFields = {
 		teamCount: {
-			value: 1,
+			name: `teamCount`,
+			initialValue: 1,
 			validations: [],
 		},
 	};
@@ -47,7 +48,7 @@ export default function TeamGenerator({ itemList }) {
 			newTeams.push(teamModel(currentTeamCount + i));
 		}
 
-		dispatch({ type: ACTIONS.UPDATE_TEAMS, payload: { teams: newTeams } });
+		dispatch({ type: ACTIONS.ADD_TEAMS, payload: { teams: newTeams } });
 
 		return newTeams;
 	};
@@ -145,7 +146,7 @@ export default function TeamGenerator({ itemList }) {
 					<label>Team Count </label>
 					<input
 						type="number"
-						name="teamCount"
+						name={formFields.teamCount.name}
 						value={formInputs.teamCount}
 						onChange={changeFormInputs}
 						min="1"
