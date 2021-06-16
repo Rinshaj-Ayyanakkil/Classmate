@@ -1,9 +1,12 @@
 import "../css/Base.css";
 import "../css/UI-Components.css";
-import useForm from "../hooks/useForm";
 import { Link } from "react-router-dom";
+import useForm from "../hooks/useForm";
+import InputField from "./FormComponents/InputField";
+import Form from "./FormComponents/Form";
+import FormButton from "./FormComponents/FormButton";
 
-export default function LoginBox(props) {
+export default function LoginForm({ onLogin, loginError }) {
 	const formFields = {
 		username: {
 			name: `username`,
@@ -30,59 +33,71 @@ export default function LoginBox(props) {
 	};
 	const [formInputs, changeFormInputs, formErrors] = useForm(formFields);
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		props.onLogin(formInputs.username, formInputs.password);
-	};
-
 	return (
 		<div className="form-box login-form">
 			<div className="header">
 				<h1>Login</h1>
+				<div className="error">{loginError}</div>
 			</div>
-			<form onSubmit={handleSubmit}>
-				{props.loginError && <span className="error">{props.loginError}</span>}
-				<div className={`field`}>
-					<label>username</label>
-					<input
-						name={formFields.username.name}
+			<div className="content">
+				<Form onSubmit={() => onLogin(formInputs)}>
+					<InputField
 						type="text"
+						label="Username"
+						placeholder="Username"
+						name={formFields.username.name}
 						value={formInputs.username}
 						onChange={changeFormInputs}
-						autoComplete="off"
-						required
+						isRequired={true}
+						error={formErrors.username}
 					/>
-					{formErrors.username && <div className="error">{formErrors.username}</div>}
-				</div>
-				<div className={`field`}>
-					<label>password</label>
-					<input
-						name={formFields.password.name}
+					<InputField
 						type="password"
+						label="Password"
+						placeholder="password"
+						name={formFields.password.name}
 						value={formInputs.password}
 						onChange={changeFormInputs}
-						required
+						isRequired={true}
+						error={formErrors.password}
 					/>
-					{formErrors.password && <div className="error">{formErrors.password}</div>}
-				</div>
-				<div className={`field`}>
-					<button
-						className="submit-button"
+					<FormButton
 						type="submit"
-						disabled={
-							Object.keys(formErrors).filter((field) => formErrors[field]).length !== 0
-						}
-					>
-						Log in
-					</button>
-				</div>
-			</form>
+						text="Login"
+						isEnabled={Object.values(formErrors).every((error) => !error)}
+					/>
+				</Form>
+				{/* <InputField
+						type="text"
+						label="Username"
+						placeholder="Username"
+						name={formFields.username.name}
+						value={formInputs.username}
+						onChange={changeFormInputs}
+						isRequired={true}
+						error={formErrors.username}
+					/>
+
+					<InputField
+						type="password"
+						label="password"
+						placeholder="password"
+						name={formFields.password.name}
+						value={formInputs.password}
+						onChange={changeFormInputs}
+						isRequired={true}
+						error={formErrors.password}
+					/>
+
+					<FormButton type="submit" text="Login" /> */}
+			</div>
 			<div className="footer">
 				<div className="link">
 					<Link to="/register">Register</Link>
 				</div>
+
 				<div className="link">
-					<Link to="/reset-password">Forgot Password</Link>
+					<Link to="/forgot-password">Forgot Password</Link>
 				</div>
 			</div>
 		</div>

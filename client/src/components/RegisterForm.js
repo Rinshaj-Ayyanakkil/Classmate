@@ -3,12 +3,23 @@ import { generateKey } from "../Globals";
 import useForm from "../hooks/useForm";
 import { Link } from "react-router-dom";
 import { useStudents } from "../contexts/StudentsContext";
+import Form from "./FormComponents/Form";
+import InputField from "./FormComponents/InputField";
+import FormButton from "./FormComponents/FormButton";
+import SelectField from "./FormComponents/SelectField";
 
-export default function RegisterForm({ handleSubmit, registerError }) {
+export default function RegisterForm({ onRegister, registrationError }) {
+	const [ids, setIds] = useState([]);
+	const students = useStudents();
+
+	useEffect(() => {
+		students ? setIds(students.map((student) => student.rollNo)) : setIds([]);
+	}, [students]);
+
 	const formFields = {
 		id: {
 			name: "id",
-			value: `1`,
+			value: ids[0] || ``,
 		},
 		username: {
 			name: "username",
@@ -41,87 +52,66 @@ export default function RegisterForm({ handleSubmit, registerError }) {
 
 	const [formInputs, changeFormInputs, formErrors] = useForm(formFields);
 
-	const [ids, setIds] = useState([]);
-	const students = useStudents();
-
-	useEffect(() => {
-		console.log(students);
-		students ? setIds(students.map((student) => student.rollNo)) : setIds([]);
-	}, [students]);
-
-	const onSubmit = (e) => {
-		e.preventDefault();
-		handleSubmit(formInputs);
-	};
-
 	return (
 		<div className="register-form form-box">
 			<div className="header">
+				{" "}
+				<div className="error">{registrationError}</div>
 				<h1>Sign Up</h1>
+				<div className="error">{registrationError}</div>
 			</div>
-			{registerError && <div className="error">{registerError}</div>}
-			<form onSubmit={onSubmit}>
-				<div className="field">
-					<label>Select your register number</label>
-					<select
+
+			<div className="content">
+				<Form onSubmit={() => onRegister(formInputs)}>
+					<SelectField
+						label="Select your id"
 						name={formFields.id.name}
-						value={formInputs.id}
+						value={formFields.id}
 						onChange={changeFormInputs}
-						required
+						isRequired={true}
 					>
 						{ids.map((id) => (
 							<option key={generateKey(id)}>{id}</option>
 						))}
-					</select>
-				</div>
-				<div className="field">
-					<label>username</label>
-					<input
-						name={formFields.username.name}
+					</SelectField>
+					<InputField
 						type="text"
+						label="Username"
+						placeholder="Username"
+						name={formFields.username.name}
 						value={formInputs.username}
 						onChange={changeFormInputs}
-						autoComplete="off"
-						required
+						isRequired={true}
+						error={formErrors.username}
 					/>
-					{formErrors.username && <div className="error">{formErrors.username}</div>}
-				</div>
-				<div className="field">
-					<label>password</label>
-					<input
-						name={formFields.password.name}
+					<InputField
 						type="password"
+						label="Password"
+						placeholder="password"
+						name={formFields.password.name}
 						value={formInputs.password}
 						onChange={changeFormInputs}
-						required
+						isRequired={true}
+						error={formErrors.password}
 					/>
-					{formErrors.password && <div className="error">{formErrors.password}</div>}
-				</div>
-				<div className="field">
-					<label>Confirm Password</label>
-					<input
-						name={formFields.confirmPassword.name}
+					<InputField
 						type="password"
+						label="Confirm Password"
+						placeholder="re-type password"
+						name={formFields.confirmPassword.name}
 						value={formInputs.confirmPassword}
 						onChange={changeFormInputs}
-						required
+						isRequired={true}
+						error={formErrors.confirmPassword}
 					/>
-					{formErrors.confirmPassword && (
-						<div className="error">{formErrors.confirmPassword}</div>
-					)}
-				</div>
-				<div className="field">
-					<button
-						className="submit-button"
+					<FormButton
 						type="submit"
-						disabled={
-							Object.keys(formErrors).filter((field) => formErrors[field]).length !== 0
-						}
-					>
-						Register
-					</button>
-				</div>
-			</form>
+						text="Login"
+						isEnabled={Object.values(formErrors).every((error) => !error)}
+					/>
+				</Form>
+			</div>
+
 			<div className="footer">
 				<div className="link">
 					<Link to="/login">Log In</Link>
