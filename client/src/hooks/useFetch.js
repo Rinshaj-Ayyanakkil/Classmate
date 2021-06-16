@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const useFetch = ({ url, options }) => {
+const useFetch = ({ url, options }, fetchOnMount = false) => {
 	const [response, setResponse] = useState();
 	const [isLoading, setLoading] = useState(false);
 
@@ -18,9 +18,11 @@ const useFetch = ({ url, options }) => {
 		}
 	}, [url, options]);
 
+	// fetch data on mount
 	useEffect(() => {
-		fetchData();
-	}, [fetchData]);
+		console.log(`fetch render`);
+		if (fetchOnMount) fetchData();
+	}, [fetchData, fetchOnMount]);
 
 	return [response, isLoading, fetchData];
 };
