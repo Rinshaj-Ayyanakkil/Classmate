@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTeams } from "../routes/TeamManagerPage";
 import useForm from "../hooks/useForm";
+import Form from "./FormComponents/Form";
+import InputField from "./FormComponents/InputField";
+import FormButton from "./FormComponents/FormButton";
+import useFetch from "../hooks/useFetch";
 
 export default function TeamSaveMenu() {
-	const [teams] = useTeams();
-	const [isLoading, setLoading] = useState(false);
-
 	const formFields = {
-		groupName: {
-			name: "groupName",
+		title: {
+			name: "title",
 			initialValue: ``,
 			validations: [
 				{ pattern: /^.{1,}$/, message: `group name cant be empty` },
@@ -21,12 +22,12 @@ export default function TeamSaveMenu() {
 	};
 	const [formInputs, changeFormInputs, formErrors] = useForm(formFields);
 
-	const saveTeams = async (event) => {
-		event.preventDefault();
+	const [teams] = useTeams();
 
-		setLoading(true);
-		const group = {
-			title: formInputs.groupName,
+	// deriving and memoizing the group
+	const group = useMemo(
+		() => ({
+			title: formInputs.title,
 			teams: teams.map((team) => {
 				return {
 					...team,
@@ -35,46 +36,62 @@ export default function TeamSaveMenu() {
 					}),
 				};
 			}),
-		};
+		}),
+		[formInputs.title, teams]
+	);
 
-		try {
-			const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/groups`, {
+	const request = useMemo(
+		() => ({
+			url: `${process.env.REACT_APP_SERVER_URL}/groups`,
+			options: {
 				method: "PUT",
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
 				},
-				body: JSON.stringify({ group: group }),
-			});
-			if (response.ok) {
-				window.alert(`Team Saved`);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
+				body: JSON.stringify({
+					group: group,
+				}),
+			},
+		}),
+		[group]
+	);
+	const [response, isLoading, fetchData] = useFetch(request);
+
+	useEffect(() => {
+		if (response) {
+			window.alert("Team Saved!");
 		}
+	}, [response]);
+
+	const saveTeams = async () => {
+		fetchData();
 	};
 
 	return (
-		<div className="team-save-menu">
+		<div className="team-save-men">
 			<div className="header">
 				<h1>Save Group</h1>
+				{isLoading && `Saving... please wait..`}
 			</div>
-			{isLoading && `Saving... please wait..`}
-			<form className="form-box" onSubmit={saveTeams}>
-				<div className="field">
-					<input
-						name={formFields.groupName.name}
+			<div className="content">
+				<Form onSubmit={saveTeams}>
+					<InputField
+						type="text"
+						label="Group Name"
 						placeholder="Group Name"
-						value={formInputs.groupName}
+						name={formFields.title.name}
+						value={formInputs.title}
 						onChange={changeFormInputs}
+						error={formErrors.title}
+						isRequired={true}
 					/>
-				</div>
-				<span className="error">{formErrors.groupName}</span>
-				<button type="submit" disabled={formErrors.groupName}>
-					Save
-				</button>
-			</form>
+					<FormButton
+						type="submit"
+						text="Save"
+						isEnabled={Object.values(formErrors).every((error) => !error)}
+					/>
+				</Form>
+			</div>
 		</div>
 	);
 }
