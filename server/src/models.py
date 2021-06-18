@@ -21,8 +21,8 @@ class StudentModel(db.Model):
     class_id = db.Column(db.Integer, db.ForeignKey("classes.id"), nullable=False)
     roll_number = db.Column(db.Integer, nullable=False, unique=True)
     name = db.Column(db.String(255), nullable=False)
-    details = db.relationship("StudentsDetailsModel", backref="students", lazy="dynamic", uselist=False)
-    user = db.relationship("LoginModel", backref="students", lazy="dynamic", uselist=False)
+    details = db.relationship("StudentDetailsModel", backref="students", uselist=False)
+    user = db.relationship("LoginModel", backref="students", uselist=False)
 
 
 class StudentDetailsModel(db.Model):
