@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_restful import Api, Resource, abort, marshal, reqparse, fields, marshal_with
 from flask_bcrypt import Bcrypt
 from models import db, StudentModel, LoginModel, GroupModel, TeamModel, TeamMemberModel
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -12,6 +13,7 @@ bcrypt = Bcrypt(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://rinshaj:@localhost/classmate"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
+migrate = Migrate(app, db)
 
 api = Api(app)
 
@@ -85,14 +87,14 @@ class Login(Resource):
             is not None
         )
         if not is_valid_id:
-            abort(400, message="Student doesn't exists")
+            abort(400, message="student doesn't exists")
 
         # checking if student is already registered
         is_already_registered = (
             LoginModel.query.with_entities(LoginModel.user_id).filter_by(roll_number=roll_number).first() is not None
         )
         if is_already_registered:
-            abort(409, message="Student already registered")
+            abort(409, message="student already registered")
 
         username = args["username"]
         password = args["password"]
