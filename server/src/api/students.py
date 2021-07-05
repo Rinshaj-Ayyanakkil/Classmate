@@ -1,10 +1,9 @@
-from flask_restful import Resource, marshal_with, fields
+from flask_restful import Resource, marshal, marshal_with, fields
 from ..models.student import StudentModel
 
-resource_fields = {
-    "rollNo": fields.Integer(attribute="roll_number"),
+
+details = {
     "regNo": fields.String(attribute="register_number"),
-    "name": fields.String,
     "dob": fields.DateTime(
         attribute="date_of_birth",
         dt_format="iso8601",
@@ -16,6 +15,12 @@ resource_fields = {
     "father": fields.String(attribute="father_name"),
     "mother": fields.String(attribute="mother_name"),
     "sex": fields.String,
+}
+
+resource_fields = {
+    "rollNo": fields.Integer(attribute="roll_number"),
+    "name": fields.String,
+    "details": fields.Nested(details),
 }
 
 
