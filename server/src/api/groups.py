@@ -8,7 +8,7 @@ from ..extensions import db
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument("group", type=dict, help="username is required", required=True, location="json")
 
-group_fields = {
+team_member_fields = {
     "id": fields.Integer(attribute="roll_number"),
     "content": fields.String(
         attribute=lambda x: StudentModel.query.filter(StudentModel.roll_number == x.roll_number).first().name
@@ -18,7 +18,7 @@ group_fields = {
 team_fields = {
     "id": fields.Integer,
     "title": fields.String,
-    "members": fields.List(fields.Nested(fields), attribute="team_members"),
+    "members": fields.List(fields.Nested(team_member_fields), attribute="team_members"),
 }
 
 group_fields = {
