@@ -3,6 +3,7 @@ from server.extensions import db
 
 class StudentDetailsModel(db.Model):
     __tablename__ = "students_details"
+
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey("students.id"), nullable=False)
     register_number = db.Column(db.String(255))
