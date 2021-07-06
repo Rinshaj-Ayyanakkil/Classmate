@@ -1,6 +1,5 @@
-from ..extensions import db
+from server.extensions import db
 from sqlalchemy.orm import backref
-from .student_details import StudentDetailsModel
 
 
 class StudentModel(db.Model):

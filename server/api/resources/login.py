@@ -1,7 +1,7 @@
 from flask_restful import Resource, marshal, fields, abort, reqparse
-from ..models.student import StudentModel
-from ..models.login import LoginModel
-from ..extensions import db, bcrypt
+from server.models.student import StudentModel
+from server.models.login import LoginModel
+from server.extensions import db, bcrypt
 
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument("username", type=str, help="username is required", required=True, location="json")

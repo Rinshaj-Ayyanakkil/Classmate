@@ -1,5 +1,5 @@
 from flask_restful import Resource, marshal, marshal_with, fields
-from ..models.student import StudentModel
+from server.models.student import StudentModel
 
 
 details = {

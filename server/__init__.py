@@ -1,7 +1,6 @@
-import os
 from flask import Flask
-from .extensions import db, cors, bcrypt, migrate, api_obj
-from .api.main import api_bp
+from server.extensions import db, cors, bcrypt, migrate, api_obj
+from server.api.api_bp import api_bp
 
 
 def create_app(config="config.py"):

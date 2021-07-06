@@ -1,9 +1,9 @@
 from flask_restful import Resource, marshal_with, fields, reqparse, abort
-from ..models.student import StudentModel
-from ..models.group import GroupModel
-from ..models.team import TeamModel
-from ..models.team_member import TeamMemberModel
-from ..extensions import db
+from server.models.student import StudentModel
+from server.models.group import GroupModel
+from server.models.team import TeamModel
+from server.models.team_member import TeamMemberModel
+from server.extensions import db
 
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument("group", type=dict, help="username is required", required=True, location="json")
